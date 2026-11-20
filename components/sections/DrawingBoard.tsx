@@ -5,7 +5,10 @@ import Picture from "@/components/Picture";
 import RoomTag from "@/components/ui/RoomTag";
 import DrawingBoardTrack from "./DrawingBoardTrack";
 
+const WORDS = ["No", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+
 export default function DrawingBoard() {
+  const count = WORDS[ongoing.length] ?? String(ongoing.length);
   return (
     <section id="drawing-board" className="board" data-tone="dark" aria-labelledby="board-h">
       <DrawingBoardTrack>
@@ -13,8 +16,8 @@ export default function DrawingBoard() {
           <RoomTag no="05" room="Drawing board" label="Ongoing works" />
           <h2 id="board-h" className="display">On the drawing board.</h2>
           <p>
-            Six projects being designed or built right now: homes, interiors, an office, a performance centre and
-            a college building in Hassan. The images are design renders.
+            {count} projects being designed or built right now: homes, interiors, an office, a performance centre
+            and a college building in Hassan. The images are design renders.
           </p>
           <p className="board__hint" aria-hidden="true">Keep scrolling to see each sheet</p>
         </div>
