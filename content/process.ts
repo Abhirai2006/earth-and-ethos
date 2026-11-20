@@ -8,4 +8,5 @@ export const process = [
   { n: "04", title: "Design and drawings", body: "Plans, elevations, sections, interiors and the detailed drawings the builders will work from." },
   { n: "05", title: "On site", body: "We stay involved during construction, supervising the work so the building is built as it was drawn." },
   { n: "06", title: "Handover", body: "A final walk-through together before you move in." },
+  { n: "07", title: "Post-occupancy support", body: "Once you have moved in, we help you choose decor, furniture and the finishing touches. We also document the entire project at this stage." },
 ];
