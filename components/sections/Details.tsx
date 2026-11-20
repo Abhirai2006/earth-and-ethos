@@ -24,10 +24,10 @@ export default function Details() {
       <div className="wrap">
         <div className="details__head">
           <RoomTag no="05" room="Material library" label="Details" />
-          <h2 id="details-h" className="display">The details do the talking.</h2>
+          <h2 id="details-h" className="display">Up close.</h2>
           <p>
-            Brick laid to let air and light through. A filler-slab ceiling. Timber carved by hand. A closer look at
-            the materials and craft in our finished work.
+            Brick laid so that light and air can pass through. A filler-slab ceiling. Timber carved by hand. A few
+            details from our finished projects.
           </p>
         </div>
         <LightboxGroup items={items} className="details__grid">
