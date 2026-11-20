@@ -140,7 +140,6 @@ export default function Hero() {
         <div className="hero__scrim" aria-hidden="true" />
 
         <div className="hero__title">
-          <p className="hero__eyebrow">Architecture studio, {site.city}</p>
           <h1>
             <span className="hero__brand">Earth &amp; Ethos</span>
             <span className="hero__services">Architecture, Planning &amp; Interiors</span>
@@ -152,10 +151,6 @@ export default function Hero() {
         </div>
 
         <p className="hero__credit" aria-live="polite">
-          <span className="hero__count">
-            {String(chapter + 1).padStart(2, "0")}
-            <i>/{String(CHAPTERS.length).padStart(2, "0")}</i>
-          </span>
           <span className="hero__room">{CHAPTERS[chapter].label}</span>
         </p>
 
