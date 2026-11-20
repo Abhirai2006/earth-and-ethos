@@ -5,7 +5,7 @@ export default function Process() {
   return (
     <section id="process" className="process" data-tone="light" aria-labelledby="process-h">
       <div className="wrap">
-        <RoomTag no="03" room="Our process" label="From first meeting to handover" />
+        <RoomTag no="03" room="Our process" label="From first meeting to life after handover" />
         <h2 id="process-h" className="display">How a project comes together.</h2>
         <ol className="process__list">
           {process.map((s) => (
