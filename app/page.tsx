@@ -4,7 +4,8 @@ import Foyer from "@/components/sections/Foyer";
 import Founder from "@/components/sections/Founder";
 import Built from "@/components/sections/Built";
 import Process from "@/components/sections/Process";
-import Stories from "@/components/sections/Stories";
+// Site stories (before / after) returns once real before and after photos are ready:
+// import Stories from "@/components/sections/Stories";
 import DrawingBoard from "@/components/sections/DrawingBoard";
 import Details from "@/components/sections/Details";
 import Testimonials from "@/components/sections/Testimonials";
@@ -20,7 +21,7 @@ export default function Home() {
       <Founder />
       <Process />
       <Built />
-      <Stories />
+      {/* <Stories /> */}
       <DrawingBoard />
       <Details />
       <Testimonials />
