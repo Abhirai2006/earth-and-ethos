@@ -12,7 +12,7 @@ const details = [
   { k: "athreya-mane/6a86ee29", material: "Jaali at dusk", project: "Athreya Mane", alt: "Perforated brick stair screen glowing from inside at dusk" },
   { k: "gurukrupa/20240617-074218", material: "Terracotta light roof", project: "Gurukrupa", alt: "Terracotta pergola over a roof terrace framing trees" },
   { k: "athreya-mane/staircase", material: "Open risers", project: "Athreya Mane", alt: "Open-riser steel and timber staircase with framed art" },
-  { k: "yamoksh-residence/20240915-213326", material: "Wall accentuations", project: "Yamoksh Residence", alt: "Three arched textured wall panels in a living room" },
+  { k: "yamoksh-residence/20240915-213326", material: "Wall accentuations", project: "Brigade Cornerstone Utopia", alt: "Three arched textured wall panels in a living room" },
   { k: "gurukrupa/20240617-074126", material: "Compressed earth blocks", project: "Gurukrupa", alt: "Staircase rising beside an exposed compressed earth block wall" },
   { k: "athreya-mane/first-floor-lobby", material: "Breathable walls", project: "Athreya Mane", alt: "Timber settee beneath traditional paintings on a clay-red wall" },
 ];
