@@ -1,6 +1,6 @@
 import LegalPage from "@/components/LegalPage";
 import { pageMeta } from "@/lib/seo";
-import { site } from "@/lib/site";
+import { site, cfBeaconToken } from "@/lib/site";
 
 export const metadata = pageMeta({
   title: "Privacy notice",
@@ -27,8 +27,14 @@ export default function Privacy() {
         message in order to deliver it; see their privacy policy at web3forms.com for details.
       </p>
       <h2>Cookies and tracking</h2>
+      {cfBeaconToken && (
+        <p>
+          We count visits with Cloudflare Web Analytics, which does not use cookies or collect personal data. It tells us
+          things like which pages are read most, never who you are.
+        </p>
+      )}
       <p>
-        This website does not use cookies, analytics or advertising trackers. Your browser&rsquo;s session storage holds a
+        This website does not use cookies or advertising trackers. Your browser&rsquo;s session storage holds a
         single flag so the opening animation plays only once per visit; it never leaves your device. Fonts and images are
         served from this website itself.
       </p>
