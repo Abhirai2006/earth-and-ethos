@@ -6,7 +6,7 @@ export default function Testimonials() {
   return (
     <section id="guestbook" className="guestbook" data-tone="light" aria-labelledby="guest-h">
       <div className="wrap">
-        <RoomTag no="06" room="Guest book" label="Kind words from clients" />
+        <RoomTag no="08" room="Guest book" label="Kind words from clients" />
         <h2 id="guest-h" className="display">From the guest book.</h2>
         <GuestBook items={testimonials} />
       </div>
