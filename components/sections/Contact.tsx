@@ -9,7 +9,7 @@ export default function Contact() {
     <section id="desk" className="desk" data-tone="dark" aria-labelledby="desk-h">
       <div className="wrap desk__grid">
         <div className="desk__head">
-          <RoomTag no="07" room="Front desk" label="Contact" />
+          <RoomTag no="09" room="Front desk" label="Contact" />
           <h2 id="desk-h" className="display">Have a site in mind? Let&rsquo;s talk.</h2>
           <p>
             Tell us about your plot, your home or your building. We&rsquo;ll get back to you and find a time to
