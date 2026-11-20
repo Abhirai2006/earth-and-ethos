@@ -211,7 +211,6 @@ export default function FounderPass() {
           <div className="pass__scale" aria-hidden="true" />
         </div>
       </div>
-      <p className="pass__hint" aria-hidden="true">Drag the pass</p>
     </div>
   );
 }
