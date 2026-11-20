@@ -98,7 +98,7 @@ export class RealHouse {
 
   private target = 0;
   private p = 0;
-  private intro = 0;
+  private intro = 1; // starts drawn, matching the placeholder still (hero-blueprint-*.webp)
   private raf = 0;
   private running = false;
   private last = 0;
@@ -142,6 +142,7 @@ export class RealHouse {
   private doorR = new THREE.Group();
   private swing = new THREE.Group();
   private pendants: THREE.PointLight[] = [];
+  private loadStatue?: () => void;
   private shrineGlow?: { wash: THREE.PointLight; halo: THREE.ShaderMaterial; box: THREE.MeshBasicMaterial; base: THREE.Color; spot: THREE.SpotLight };
   private shafts!: THREE.Mesh;
   private motes!: THREE.Points;
@@ -171,6 +172,9 @@ export class RealHouse {
   private disposables: { dispose: () => void }[] = [];
   onChapter?: (i: number) => void;
   onReady?: () => void;
+  /** the device cannot keep up (or lost the GPU): show the still hero instead */
+  onFail?: () => void;
+  private size = "";
 
   constructor(canvas: HTMLCanvasElement, opts: { mobile: boolean }) {
     this.hq = !opts.mobile;
@@ -182,6 +186,12 @@ export class RealHouse {
     r.shadowMap.type = THREE.PCFShadowMap;
     r.localClippingEnabled = true;
     this.renderer = r;
+    // phones can drop the GPU context under memory pressure: hand over to the still image
+    canvas.addEventListener("webglcontextlost", (e) => {
+      e.preventDefault();
+      this.stop();
+      this.onFail?.();
+    });
     this.pmrem = new THREE.PMREMGenerator(r);
 
     this.camera = new THREE.PerspectiveCamera(42, 1, 0.08, 4000);
@@ -250,8 +260,11 @@ export class RealHouse {
       this.gtao.updateGtaoMaterial({ radius: 0.55, distanceExponent: 1.4, thickness: 1.2, scale: 1, samples: 12 });
       this.composer.addPass(this.gtao);
     }
-    this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x / 2, size.y / 2), 0.05, 0.45, 3.2);
-    this.composer.addPass(this.bloom);
+    // bloom is the heaviest pass; phones go without it (the lamps still glow)
+    if (this.hq) {
+      this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x / 2, size.y / 2), 0.05, 0.45, 3.2);
+      this.composer.addPass(this.bloom);
+    }
     this.composer.addPass(new OutputPass());
     // photographic finish, in display space: soft S-curve, warm highlights and
     // cool shadows, a lens vignette and fine moving grain. Off on the drawing sheet.
@@ -395,7 +408,7 @@ export class RealHouse {
 
     const sun = this.sun;
     sun.castShadow = true;
-    const sm = hq ? 4096 : 1536;
+    const sm = hq ? 4096 : 1024;
     sun.shadow.mapSize.set(sm, sm);
     const sc = sun.shadow.camera;
     sc.left = -26; sc.right = 26; sc.top = 26; sc.bottom = -26; sc.near = 1; sc.far = 140;
@@ -725,7 +738,7 @@ export class RealHouse {
         land.add(pot);
         clumps.push({ x: px, y: 0.3 + 0.56 + 0.22, z: 4.5, r: 0.3 });
       }
-      const per = hq ? 26 : 12;
+      const per = hq ? 26 : 9;
       const cardGeo = new THREE.PlaneGeometry(0.42, 0.42);
       this.disposables.push(cardGeo);
       const shrubs = new THREE.InstancedMesh(cardGeo, leafMat, clumps.length * per);
@@ -770,7 +783,7 @@ export class RealHouse {
       const fm = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 });
       this.disposables.push(fm);
       const rnd = this.rngFor(203);
-      const count = hq ? 420 : 220;
+      const count = hq ? 420 : 140;
       const far = new THREE.InstancedMesh(blob, fm, count);
       const o3 = new THREE.Object3D();
       const col = new THREE.Color();
@@ -794,7 +807,7 @@ export class RealHouse {
 
     // grass: individual blades, swaying in a travelling gust
     {
-      const count = hq ? 26000 : 7000;
+      const count = hq ? 26000 : 4500;
       const blade = new THREE.PlaneGeometry(0.035, 0.38, 1, 4);
       const bp = blade.attributes.position as THREE.BufferAttribute;
       for (let i = 0; i < bp.count; i++) {
@@ -1037,7 +1050,8 @@ export class RealHouse {
     const url = this.hq ? "/models/ganesha.glb" : "/models/ganesha-lite.glb";
     const statueMat = new THREE.MeshStandardMaterial({ color: 0xc9a25a, metalness: 1, roughness: 0.32, envMapIntensity: 1.6 });
     this.disposables.push(statueMat);
-    new GLTFLoader()
+    // fetched only once the visitor scrolls into the build (see apply), not on first load
+    this.loadStatue = () => new GLTFLoader()
       .setMeshoptDecoder(MeshoptDecoder)
       .loadAsync(url)
       .then((gltf) => {
@@ -1324,6 +1338,9 @@ export class RealHouse {
     this.texReady = true;
     this.renderOnce();
     this.onReady?.();
+    // compile every material now, while the drawing is on screen, so the first
+    // scroll into the build doesn't stall for a second or two on a phone
+    setTimeout(() => this.prewarm(), 60);
   }
 
   // ── the sun: morning to golden hour while the house goes up
@@ -1415,6 +1432,11 @@ export class RealHouse {
       if (changed) this.jaali.instanceMatrix.needsUpdate = true;
     }
     this.interior.visible = T > 11 || t > 0.5;
+    if (this.loadStatue && t > 0.12) {
+      const load = this.loadStatue;
+      this.loadStatue = undefined;
+      load();
+    }
     for (const a of this.appear) a.obj.visible = T >= a.at;
     for (const g of this.glass) g.opacity = clamp((T - 10.8) / 0.8) * 0.42;
 
@@ -1503,6 +1525,26 @@ export class RealHouse {
   }
 
   /** evening or night: the time-lapse ends at golden hour, or carries on into the night */
+  private prewarm() {
+    if (this.disposed) return;
+    const vis = [this.world.visible, this.sky.visible, this.interior.visible, this.overlay.visible];
+    this.world.visible = this.sky.visible = this.interior.visible = true;
+    this.overlay.visible = false;
+    // one hidden, tiny render of the whole house: compiles the shaders (shadow ones
+    // too) and uploads every texture, off screen, while nobody is scrolling yet
+    const rt = new THREE.WebGLRenderTarget(32, 32);
+    try {
+      this.renderer.setRenderTarget(rt);
+      this.renderer.render(this.scene, this.camera);
+    } catch {
+      /* best effort */
+    } finally {
+      this.renderer.setRenderTarget(null);
+      rt.dispose();
+      [this.world.visible, this.sky.visible, this.interior.visible, this.overlay.visible] = vis;
+    }
+  }
+
   setNight(on: boolean, instant = false) {
     this.nightTarget = on ? 1 : 0;
     if (instant) this.nightBlend = this.nightTarget;
@@ -1515,6 +1557,10 @@ export class RealHouse {
   }
 
   resize(w: number, h: number) {
+    // mobile browsers fire resize as the address bar slides; skip if nothing changed
+    const key = `${w}x${h}`;
+    if (key === this.size) return;
+    this.size = key;
     this.renderer.setSize(w, h, false);
     this.composer.setSize(w, h);
     this.camera.aspect = w / h;
@@ -1537,6 +1583,13 @@ export class RealHouse {
     this.frameMs += (dt - this.frameMs) * 0.05;
     if (!this.degraded && this.frameMs > 30) {
       if (++this.slowFrames > 90) this.degrade();
+    } else if (this.degraded && this.frameMs > 75) {
+      // still far too slow after lightening: this device gets the still image
+      if (++this.slowFrames > 150) {
+        this.stop();
+        this.onFail?.();
+        return;
+      }
     } else this.slowFrames = 0;
     this.uTime.value = this.clock;
     if (this.intro < 1) this.intro = Math.min(1, this.intro + dt / 2600);
@@ -1580,6 +1633,7 @@ export class RealHouse {
 
   private disposed = false;
   dispose() {
+    if (this.disposed) return;
     this.disposed = true;
     this.stop();
     this.disposables.forEach((d) => d.dispose());
