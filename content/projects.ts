@@ -20,6 +20,8 @@ export type Project = {
   gallery: Img[];
   /** true when the imagery is design visualisation (renders), not photography */
   renders?: boolean;
+  /** drawing sheets: plans, elevations, presentation boards */
+  drawings?: Img[];
 };
 
 const A = "athreya-mane/";
@@ -168,6 +170,11 @@ export const projects: Project[] = [
     ],
     features: ["Mangalore-tile roofs", "Brick jaali walls", "Brick and plaster combination", "Local materials", "Louvres for airflow and shade"],
     renders: true,
+    drawings: [
+      { k: B + "drawing-sheet-1", alt: "Presentation sheet for Guru Nivasa: views, ground and first floor plans, and the material palette" },
+      { k: B + "drawing-sheet-2", alt: "Presentation sheet for the dining hall: elevations, floor plan and design features" },
+      { k: B + "drawing-sheet-3", alt: "Site plan for Banavara Vedike showing the guest house and dining hall" },
+    ],
     cover: { k: B + "dining-hall-1", alt: "Visualisation of the Banavara dining hall: brick jaali upper storey under a Mangalore-tile roof", render: true },
     gallery: [
       { k: B + "dining-hall-2", alt: "Visualisation of the dining hall front elevation with jaali panels and colonnade", render: true },
