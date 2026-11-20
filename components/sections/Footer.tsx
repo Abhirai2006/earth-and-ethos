@@ -34,6 +34,8 @@ export default function Footer() {
           <ul>
             <li><Link href="/privacy/">Privacy notice</Link></li>
             <li><Link href="/terms/">Terms of use</Link></li>
+            <li><Link href="/kn/" hrefLang="kn-IN" lang="kn">ಕನ್ನಡದಲ್ಲಿ ಓದಿ</Link></li>
+            <li><a href="/earth-and-ethos-studio-profile.pdf" download>Studio profile (PDF)</a></li>
           </ul>
         </div>
         <p className="footer__legal">
