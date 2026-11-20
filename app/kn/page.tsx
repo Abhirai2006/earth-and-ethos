@@ -5,7 +5,7 @@ import { completed, ongoing } from "@/content/projects";
 import Picture from "@/components/Picture";
 import Footer from "@/components/sections/Footer";
 import { pageMeta } from "@/lib/seo";
-import { absoluteUrl } from "@/lib/site";
+import { absoluteUrl, site } from "@/lib/site";
 
 const serif = Noto_Serif_Kannada({ subsets: ["kannada"], weight: ["400", "600"], variable: "--font-kn-serif", display: "swap" });
 const sans = Noto_Sans_Kannada({ subsets: ["kannada"], weight: ["400", "600"], variable: "--font-kn-sans", display: "swap" });
@@ -54,7 +54,7 @@ export default function Kannada() {
       <section className="kn__sec kn__sec--alt" data-tone="light">
         <div className="wrap kn__founder">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/images/founder/santhosh-634.webp" width={634} height={826} alt="ಆರ್ಕಿಟೆಕ್ಟ್ ಸಂತೋಷ್ ಕೆ.ಎಸ್. ಅವರ ಭಾವಚಿತ್ರ" loading="lazy" />
+          <img src="/images/founder/santhosh-880.webp" width={880} height={1000} alt="ಆರ್ಕಿಟೆಕ್ಟ್ ಸಂತೋಷ್ ಕೆ.ಎಸ್. ಅವರ ಭಾವಚಿತ್ರ" loading="lazy" />
           <div>
             <h2>{kn.founderTitle}</h2>
             <p className="kn__name">{kn.founderName}</p>
@@ -108,6 +108,11 @@ export default function Kannada() {
           <h2>{kn.contactTitle}</h2>
           <p>{kn.contactBody}</p>
           <p><Link className="btn btn--solid" href="/#desk">{kn.contactCta}</Link></p>
+          <ul className="kn__reach">
+            {site.contact.phone && <li>{kn.phone}: <a href={`tel:${site.contact.phone.replace(/[^\d+]/g, "")}`}>{site.contact.phone}</a></li>}
+            {site.contact.whatsapp && <li><a href={`https://wa.me/${site.contact.whatsapp}`} target="_blank" rel="noopener noreferrer">{kn.whatsapp}</a></li>}
+            {site.contact.email && <li>{kn.email}: <a href={`mailto:${site.contact.email}`}>{site.contact.email}</a></li>}
+          </ul>
           <p className="kn__city">{kn.city}</p>
         </div>
       </section>
