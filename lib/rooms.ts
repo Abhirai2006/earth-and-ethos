@@ -7,7 +7,7 @@ export const rooms: Room[] = [
   { id: "founder", room: "Study", label: "The founder", x: 20, y: 170, w: 100, h: 120 },
   { id: "built", room: "Gallery", label: "Completed works", x: 20, y: 20, w: 100, h: 150 },
   { id: "drawing-board", room: "Drawing board", label: "Ongoing works", x: 120, y: 80, w: 160, h: 90 },
-  { id: "details", room: "Material library", label: "Details", x: 280, y: 20, w: 100, h: 110 },
-  { id: "guestbook", room: "Guest book", label: "Kind words", x: 280, y: 130, w: 100, h: 160 },
+  { id: "details", room: "Design library", label: "Details", x: 280, y: 20, w: 100, h: 110 },
+  { id: "guestbook", room: "Guest lounge", label: "Kind words", x: 280, y: 130, w: 100, h: 160 },
   { id: "desk", room: "Front desk", label: "Contact", x: 120, y: 20, w: 160, h: 60 },
 ];
