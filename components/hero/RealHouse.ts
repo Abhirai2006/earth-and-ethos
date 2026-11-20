@@ -17,6 +17,9 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { GTAOPass } from "three/examples/jsm/postprocessing/GTAOPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { MARK_PATHS } from "@/components/Logo";
+import { site } from "@/lib/site";
 import * as TX from "./textures";
 
 const G = 9.81;
@@ -44,6 +47,31 @@ function fall(tau: number, h: number, e = 0.2) {
   return 0;
 }
 const impactTime = (h: number) => Math.sqrt((2 * h) / G);
+
+/** three.js ACES filmic, same constants as its shader: scene-linear in, display-linear out. */
+function aces(c: number[], exposure: number) {
+  const k = exposure / 0.6;
+  const r = c[0] * k, g = c[1] * k, b = c[2] * k;
+  const v = [0.59719 * r + 0.35458 * g + 0.04823 * b, 0.076 * r + 0.90834 * g + 0.01566 * b, 0.0284 * r + 0.13383 * g + 0.83777 * b];
+  const f = v.map((x) => (x * (x + 0.0245786) - 0.000090537) / (x * (0.983729 * x + 0.432951) + 0.238081));
+  return [
+    1.60475 * f[0] - 0.53108 * f[1] - 0.07367 * f[2],
+    -0.10208 * f[0] + 1.10813 * f[1] - 0.00605 * f[2],
+    -0.00327 * f[0] - 0.07276 * f[1] + 1.07602 * f[2],
+  ].map((x) => clamp(x));
+}
+/** The scene colour that tone-maps to exactly `hex`, so the drawing sheet matches the page's CSS grey. */
+function preTone(hex: number, exposure: number, out = new THREE.Color()) {
+  const t = new THREE.Color(hex);
+  const want = [t.r, t.g, t.b];
+  let x = [...want];
+  for (let i = 0; i < 30; i++) {
+    const y = aces(x, exposure);
+    x = x.map((v, j) => Math.max(0, (v * (want[j] + 1e-5)) / (y[j] + 1e-5)));
+  }
+  return out.setRGB(x[0], x[1], x[2]);
+}
+const SHEET = 0x2f3436; // keep in step with --print in globals.css
 
 /** Under-damped spring from 0 to 1 (door swinging open and settling). */
 function spring(t: number, zeta = 0.5, w = 6.5) {
@@ -90,6 +118,8 @@ export class RealHouse {
   private envSky = new Sky();
   private lastEnvKey = "";
   private exposure = 0.4;
+  private sheetKey = -1;
+  private grade?: ShaderPass;
 
   // blueprint layer
   private overlay: THREE.Mesh;
@@ -191,7 +221,7 @@ export class RealHouse {
       transparent: true,
       depthTest: false,
       depthWrite: false,
-      uniforms: { uA: { value: 1 }, uC: { value: new THREE.Color(0x1b2427) } },
+      uniforms: { uA: { value: 1 }, uC: { value: preTone(SHEET, this.exposure) } },
       vertexShader: "varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.0,1.0); }",
       fragmentShader: "uniform float uA; uniform vec3 uC; void main(){ gl_FragColor=vec4(uC,uA); }",
     });
@@ -199,7 +229,7 @@ export class RealHouse {
     this.overlay.frustumCulled = false;
     this.overlay.renderOrder = 10;
     this.disposables.push(ovMat);
-    this.grid = new THREE.GridHelper(80, 80, 0x4b5a5e, 0x2e3a3d);
+    this.grid = new THREE.GridHelper(80, 80, preTone(0x5d6567, this.exposure), preTone(0x434a4c, this.exposure));
     const gm = this.grid.material as THREE.Material;
     gm.transparent = true;
     gm.depthTest = false;
@@ -223,6 +253,26 @@ export class RealHouse {
     this.bloom = new UnrealBloomPass(new THREE.Vector2(size.x / 2, size.y / 2), 0.05, 0.45, 3.2);
     this.composer.addPass(this.bloom);
     this.composer.addPass(new OutputPass());
+    // photographic finish, in display space: soft S-curve, warm highlights and
+    // cool shadows, a lens vignette and fine moving grain. Off on the drawing sheet.
+    this.grade = new ShaderPass({
+      uniforms: { tDiffuse: { value: null }, uT: { value: 0 }, uK: { value: 0 } },
+      vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }",
+      fragmentShader: `uniform sampler2D tDiffuse; uniform float uT; uniform float uK; varying vec2 vUv;
+        float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+        void main(){
+          vec4 c = texture2D(tDiffuse, vUv);
+          vec3 col = c.rgb;
+          float l = dot(col, vec3(0.2126, 0.7152, 0.0722));
+          col = mix(col, col * col * (3.0 - 2.0 * col), 0.16 * uK);
+          col += uK * (vec3(0.016, 0.007, -0.012) * smoothstep(0.4, 1.0, l) + vec3(-0.006, 0.0, 0.01) * (1.0 - smoothstep(0.0, 0.3, l)));
+          vec2 q = vUv - 0.5;
+          col *= 1.0 - uK * 0.55 * dot(q, q);
+          col += (h(vUv * 1371.0 + fract(uT) * 97.0) - 0.5) * 0.022;
+          gl_FragColor = vec4(col, c.a);
+        }`,
+    });
+    this.composer.addPass(this.grade);
 
     this.updateSun(0, true);
     this.generateTextures();
@@ -334,8 +384,8 @@ export class RealHouse {
     this.envSky.scale.setScalar(2000);
     for (const s of [this.sky, this.envSky]) {
       const u = s.material.uniforms;
-      u.turbidity.value = 5.5;
-      u.rayleigh.value = 1.6;
+      u.turbidity.value = 4.4;
+      u.rayleigh.value = 2.0;
       u.mieCoefficient.value = 0.004;
       u.mieDirectionalG.value = 0.82;
     }
@@ -368,6 +418,10 @@ export class RealHouse {
     const groundM = this.std(0xffffff, "ground", { roughness: 1 });
     const brass = this.std(0xc9a45c, undefined, { roughness: 0.32, metalness: 1 });
     const bark = this.std(0x5a4636, "concrete", { roughness: 0.95 });
+    const granite = this.std(0x77716a, "stone", { roughness: 0.7 });
+    const soil = this.std(0x3b2c21, "ground", { roughness: 1 });
+    const terracotta = this.std(0xa25f3e, "concrete", { roughness: 0.9 });
+    const iron = this.std(0x2f3333, undefined, { roughness: 0.45, metalness: 0.7 });
 
     // ground: lawn & soil, metre UVs
     const gGeo = new THREE.PlaneGeometry(320, 320, 1, 1);
@@ -405,7 +459,7 @@ export class RealHouse {
     // plinth, poured first
     const plinth = new THREE.Group();
     W.add(plinth);
-    this.box(plinth, 23, 0.3, 17, 3.5, 0, -2.5, paver);
+    this.box(plinth, 23, 0.3, 17, 3.5, 0, -2.5, [granite, granite, paver, paver, granite, granite]);
     this.box(plinth, 3.2, 0.15, 1.2, 4.2, 0, 6.6, paver);
     this.pours.push({ obj: plinth, mat: paver, start: 0, cure: 0 });
 
@@ -484,6 +538,17 @@ export class RealHouse {
     for (let i = 0; i < 4; i++) {
       const mu = this.box(W, 0.07, 2.2, 0.14, 5.45 + i * 1.0, 1.2, 3.9, timber, { edges: false });
       this.appear.push({ obj: mu, at: 10.4 + i * 0.1 });
+    }
+    // the window's frame, a projecting stone sill and a thin concrete chajja to shade it
+    {
+      const det = new THREE.Group();
+      W.add(det);
+      this.box(det, 3.1, 0.08, 0.14, 6.95, 1.2, 3.9, timber, { edges: false });
+      this.box(det, 3.1, 0.08, 0.14, 6.95, 3.32, 3.9, timber, { edges: false });
+      this.box(det, 3.1, 0.05, 0.1, 6.95, 2.62, 3.9, timber, { edges: false });
+      this.box(det, 3.4, 0.07, 0.34, 6.95, 1.13, 4.09, granite, { edges: false });
+      this.box(det, 3.7, 0.1, 0.72, 6.95, 3.4, 4.36, conc, { edges: false });
+      this.appear.push({ obj: det, at: 10.6 });
     }
 
     // roof slab with pergola skylight; cast in concrete, dries pale
@@ -623,6 +688,109 @@ export class RealHouse {
     trees.forEach(([x, z, s], i) => this.tree(W, x, z, s, bark, leafMat, hq ? 480 : 200, 31 + i));
     this.tree(I, 6.5, -4.6, 0.62, bark, leafMat, hq ? 160 : 70, 77, 0.8);
     this.buildShrine(I, timber);
+    this.buildSign(I);
+
+    // ── landscaping, planted last: raised beds along the facade, pots by the door,
+    // low bollard lights on the path and a tree line on the horizon
+    {
+      const land = new THREE.Group();
+      W.add(land);
+      this.appear.push({ obj: land, at: 12.2 });
+      const rnd = this.rngFor(91);
+      const clumps: { x: number; y: number; z: number; r: number }[] = [];
+      const bed = (x0: number, x1: number, z0: number, z1: number) => {
+        const cx = (x0 + x1) / 2, cz = (z0 + z1) / 2, w = x1 - x0, d = z1 - z0;
+        const k = 0.09;
+        this.box(land, w, 0.38, k, cx, 0.3, z1 - k / 2, granite, { edges: false });
+        this.box(land, w, 0.38, k, cx, 0.3, z0 + k / 2, granite, { edges: false });
+        this.box(land, k, 0.38, d, x0 + k / 2, 0.3, cz, granite, { edges: false });
+        this.box(land, k, 0.38, d, x1 - k / 2, 0.3, cz, granite, { edges: false });
+        this.box(land, w - 2 * k, 0.32, d - 2 * k, cx, 0.3, cz, soil, { edges: false, cast: false });
+        const n = Math.round(w * d * 3.2);
+        for (let i = 0; i < n; i++) {
+          const r = 0.26 + rnd() * 0.22;
+          clumps.push({ x: x0 + 0.2 + rnd() * (w - 0.4), y: 0.62 + r * 0.45, z: z0 + 0.2 + rnd() * (d - 0.4), r });
+        }
+      };
+      bed(-0.3, 2.45, 4.1, 5.05);
+      bed(5.95, 8.3, 4.1, 5.05);
+      bed(-6.7, -0.9, 3.45, 4.35);
+      bed(9.0, 14.0, 2.5, 3.45);
+      for (const px of [2.62, 5.78]) {
+        const pg = new THREE.CylinderGeometry(0.23, 0.17, 0.56, 28);
+        this.disposables.push(pg);
+        const pot = new THREE.Mesh(pg, terracotta);
+        pot.position.set(px, 0.3 + 0.28, 4.5);
+        pot.castShadow = pot.receiveShadow = true;
+        land.add(pot);
+        clumps.push({ x: px, y: 0.3 + 0.56 + 0.22, z: 4.5, r: 0.3 });
+      }
+      const per = hq ? 26 : 12;
+      const cardGeo = new THREE.PlaneGeometry(0.42, 0.42);
+      this.disposables.push(cardGeo);
+      const shrubs = new THREE.InstancedMesh(cardGeo, leafMat, clumps.length * per);
+      const o2 = new THREE.Object3D();
+      const col = new THREE.Color();
+      let n = 0;
+      for (const c of clumps) {
+        const tint = 0.62 + rnd() * 0.25;
+        for (let i = 0; i < per; i++) {
+          const rr = Math.cbrt(rnd()) * c.r;
+          const th = rnd() * Math.PI * 2, ph = Math.acos(2 * rnd() - 1);
+          o2.position.set(c.x + rr * Math.sin(ph) * Math.cos(th), c.y + rr * Math.cos(ph) * 0.7, c.z + rr * Math.sin(ph) * Math.sin(th));
+          o2.rotation.set(rnd() * Math.PI, rnd() * Math.PI, rnd() * Math.PI);
+          o2.scale.setScalar(0.6 + rnd() * 0.5);
+          o2.updateMatrix();
+          shrubs.setMatrixAt(n, o2.matrix);
+          // the inside of a bush is in its own shade
+          col.setScalar(tint * (0.55 + 0.6 * (rr / c.r)));
+          shrubs.setColorAt(n++, col);
+        }
+      }
+      shrubs.castShadow = shrubs.receiveShadow = true;
+      land.add(shrubs);
+      for (const [bx, bz] of [[2.88, 9.0], [5.52, 12.0], [2.88, 15.0], [5.52, 18.0]]) {
+        this.box(land, 0.12, 0.58, 0.12, bx, 0, bz, iron, { edges: false });
+        const cap = this.box(land, 0.1, 0.1, 0.1, bx, 0.44, bz, this.glow(0xffd09a), { edges: false, cast: false });
+        cap.scale.set(1.25, 1, 1.25);
+      }
+    }
+    // the horizon: a ring of distant trees, softened by the haze
+    {
+      const blob = new THREE.IcosahedronGeometry(1, 2);
+      const bpos = blob.attributes.position as THREE.BufferAttribute;
+      const v = new THREE.Vector3();
+      for (let i = 0; i < bpos.count; i++) {
+        v.fromBufferAttribute(bpos, i);
+        const nz = 1 + 0.16 * Math.sin(v.x * 5.1 + v.y * 3.3) * Math.cos(v.z * 4.7 - v.y * 2.1);
+        bpos.setXYZ(i, v.x * nz, v.y * nz, v.z * nz);
+      }
+      blob.computeVertexNormals();
+      this.disposables.push(blob);
+      const fm = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 1 });
+      this.disposables.push(fm);
+      const rnd = this.rngFor(203);
+      const count = hq ? 420 : 220;
+      const far = new THREE.InstancedMesh(blob, fm, count);
+      const o3 = new THREE.Object3D();
+      const col = new THREE.Color();
+      let n = 0;
+      while (n < count) {
+        const a = rnd() * Math.PI * 2, rr = 62 + rnd() * 80;
+        const tx = 3.5 + Math.cos(a) * rr, tz = -1 + Math.sin(a) * rr;
+        const sw = 3 + rnd() * 3.5, sh = 2.6 + rnd() * 3.2, trunk = 2 + rnd() * 3.5;
+        for (let j = 0; j < 4 && n < count; j++) {
+          o3.position.set(tx + (rnd() - 0.5) * sw, trunk + sh * (0.6 + rnd() * 0.5), tz + (rnd() - 0.5) * sw);
+          o3.scale.set(sw * (0.5 + rnd() * 0.4), sh * (0.5 + rnd() * 0.4), sw * (0.5 + rnd() * 0.4));
+          o3.rotation.y = rnd() * Math.PI;
+          o3.updateMatrix();
+          far.setMatrixAt(n, o3.matrix);
+          col.setRGB(0.15 + rnd() * 0.06, 0.21 + rnd() * 0.07, 0.11 + rnd() * 0.04);
+          far.setColorAt(n++, col);
+        }
+      }
+      W.add(far);
+    }
 
     // grass: individual blades, swaying in a travelling gust
     {
@@ -781,7 +949,8 @@ export class RealHouse {
       o.scale.set(sc, sc, sc);
       o.updateMatrix();
       cards.setMatrixAt(i, o.matrix);
-      col.setScalar(0.75 + rnd() * 0.4);
+      // cards deep inside the canopy sit in its shade
+      col.setScalar((0.5 + 0.55 * (r / (1.25 * s))) * (0.85 + rnd() * 0.35));
       cards.setColorAt(i, col);
     }
     cards.castShadow = true;
@@ -892,6 +1061,151 @@ export class RealHouse {
       .catch(() => {
         /* the hall still reads without the statue */
       });
+  }
+
+  /**
+   * The studio's sign on the exposed brick beside the shrine: the mark in its
+   * own colours with bronze outlines, the name in dark bronze, standing 4 cm
+   * off the wall and halo-lit from behind like the mandala. A small spot
+   * tucked under the mezzanine grazes the brick around it.
+   */
+  private buildSign(I: THREE.Object3D) {
+    const wallZ = -7.7, cx = 1.3, cy = 2.2, SW = 1.9, SH = 0.6;
+    const PX = this.hq ? 2048 : 1024;
+    const W = PX, H = Math.round((PX * SH) / SW);
+    const mk = () => {
+      const c = document.createElement("canvas");
+      c.width = W;
+      c.height = H;
+      return c;
+    };
+    const face = mk(), mr = mk(), halo = mk();
+    const faceTex = new THREE.CanvasTexture(face), mrTex = new THREE.CanvasTexture(mr), haloTex = new THREE.CanvasTexture(halo);
+    faceTex.colorSpace = THREE.SRGBColorSpace;
+    for (const t of [faceTex, mrTex, haloTex]) t.anisotropy = 8;
+    this.disposables.push(faceTex, mrTex, haloTex);
+
+    const draw = () => {
+      const css = getComputedStyle(document.documentElement);
+      const serif = css.getPropertyValue("--font-display").trim() || "Georgia, serif";
+      // one pass per canvas: brand colours, roughness/metal (G/B), and a white silhouette
+      const paint = (ctx: CanvasRenderingContext2D, mode: "face" | "mr" | "mask") => {
+        ctx.clearRect(0, 0, W, H);
+        if (mode === "mr") {
+          ctx.fillStyle = "rgb(0,255,0)";
+          ctx.fillRect(0, 0, W, H);
+        }
+        const brass = mode === "face" ? "#3a2d22" : mode === "mr" ? "rgb(0,110,150)" : "#fff";
+        const paintC = (hex: string) => (mode === "face" ? hex : mode === "mr" ? "rgb(0,150,40)" : "#fff");
+        // the mark (viewBox 290 40 1020 1230), fitted to the sign's height
+        const s = (H * 0.94) / 1230;
+        ctx.save();
+        ctx.translate(H * 0.03 - 290 * s, H * 0.03 - 40 * s);
+        ctx.scale(s, s);
+        const fill = (d: string, c: string) => {
+          ctx.fillStyle = c;
+          ctx.fill(new Path2D(d));
+        };
+        fill(MARK_PATHS.sun, paintC("#D2B495"));
+        fill(MARK_PATHS.brown, paintC("#8C6249"));
+        fill(MARK_PATHS.sage, paintC("#7A8B73"));
+        fill(MARK_PATHS.charcoal, paintC("#3E4444"));
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = brass;
+        ctx.lineWidth = 34;
+        ctx.stroke(new Path2D(MARK_PATHS.stem));
+        ctx.strokeStyle = paintC("#7A8B73");
+        ctx.lineWidth = 14;
+        ctx.stroke(new Path2D(MARK_PATHS.stem));
+        for (const d of MARK_PATHS.leaves) {
+          const p = new Path2D(d);
+          ctx.strokeStyle = brass;
+          ctx.lineWidth = 16;
+          ctx.stroke(p);
+          ctx.fillStyle = paintC("#7A8B73");
+          ctx.fill(p);
+        }
+        ctx.restore();
+        // the name, centred on the mark
+        const x0 = H * 0.98;
+        const room = W - x0 - W * 0.01;
+        ctx.fillStyle = brass;
+        ctx.textBaseline = "alphabetic";
+        let px = H * 0.56;
+        ctx.font = `${px}px ${serif}`;
+        const tw = ctx.measureText(site.name).width;
+        if (tw > room) px *= room / tw;
+        ctx.font = `${px}px ${serif}`;
+        ctx.fillText(site.name, x0, H * 0.68);
+      };
+      paint(face.getContext("2d")!, "face");
+      paint(mr.getContext("2d")!, "mr");
+      // halo: the silhouette, blurred by repeated down- and up-sampling (works in every browser)
+      const hctx = halo.getContext("2d")!;
+      const sil = mk();
+      paint(sil.getContext("2d")!, "mask");
+      hctx.fillStyle = "#000";
+      hctx.fillRect(0, 0, W, H);
+      const tmp = document.createElement("canvas");
+      tmp.width = Math.round(W / 24);
+      tmp.height = Math.round(H / 24);
+      const tctx = tmp.getContext("2d")!;
+      tctx.imageSmoothingQuality = "high";
+      tctx.drawImage(sil, 0, 0, tmp.width, tmp.height);
+      hctx.imageSmoothingQuality = "high";
+      hctx.globalAlpha = 0.9;
+      hctx.drawImage(tmp, 0, 0, W, H);
+      tctx.clearRect(0, 0, tmp.width, tmp.height);
+      tctx.drawImage(sil, 0, 0, tmp.width / 2, tmp.height / 2);
+      hctx.globalAlpha = 0.6;
+      hctx.drawImage(tmp, 0, 0, tmp.width / 2, tmp.height / 2, 0, 0, W, H);
+      faceTex.needsUpdate = mrTex.needsUpdate = haloTex.needsUpdate = true;
+    };
+    draw();
+    document.fonts?.ready.then(() => !this.disposed && draw());
+
+    // a calm limewash panel so the name reads against the brick
+    const panel = this.std(0xd8cfc0, "plaster");
+    this.box(I, SW + 0.5, SH + 0.46, 0.025, cx, cy - (SH + 0.46) / 2, wallZ + 0.012, panel, { edges: false, cast: false });
+    const z0 = wallZ + 0.026;
+    const geo = new THREE.PlaneGeometry(SW, SH);
+    this.disposables.push(geo);
+    const front = new THREE.MeshStandardMaterial({
+      map: faceTex,
+      roughnessMap: mrTex,
+      metalnessMap: mrTex,
+      roughness: 1,
+      metalness: 1,
+      alphaTest: 0.5,
+      envMapIntensity: 1.5,
+    });
+    // the 4 cm of letter thickness: darker copies stepping back to the wall
+    const side = new THREE.MeshStandardMaterial({ map: faceTex, color: 0x6a5a48, roughness: 0.6, metalness: 0.3, alphaTest: 0.5 });
+    this.disposables.push(front, side);
+    const steps = this.hq ? 6 : 3;
+    for (let i = 0; i <= steps; i++) {
+      const m = new THREE.Mesh(geo, i === steps ? front : side);
+      m.position.set(cx, cy, z0 + 0.004 + (0.032 * i) / steps);
+      m.castShadow = i === steps;
+      I.add(m);
+    }
+    const haloMat = new THREE.MeshBasicMaterial({
+      map: haloTex,
+      color: new THREE.Color(1.0, 0.62, 0.3).multiplyScalar(2.2),
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    this.disposables.push(haloMat);
+    const h = new THREE.Mesh(geo, haloMat);
+    h.scale.setScalar(1.06);
+    h.position.set(cx, cy, z0 + 0.001);
+    I.add(h);
+    const graze = new THREE.SpotLight(0xffd6a8, 7, 3.6, 0.62, 0.9, 2);
+    graze.position.set(cx, 3.5, wallZ + 0.35);
+    graze.target.position.set(cx, 1.6, wallZ);
+    I.add(graze, graze.target);
   }
 
   // shafts of sun through the pergola, and dust motes that only glow inside them
@@ -1168,6 +1482,18 @@ export class RealHouse {
     this.adapt += (inside - this.adapt) * (1 - Math.exp(-dt / 900));
     this.renderer.toneMappingExposure = this.exposure * lerp(1, 1.5, this.adapt) * lerp(1, 1.9, this.nightK * (1 - this.adapt * 0.8));
     this.scene.environmentIntensity = lerp(0.55, 0.32, this.adapt);
+    {
+      const ov = (this.overlay.material as THREE.ShaderMaterial).uniforms;
+      const e = Math.round(this.renderer.toneMappingExposure * 1000);
+      if (ov.uA.value > 0.001 && e !== this.sheetKey) {
+        this.sheetKey = e;
+        preTone(SHEET, e / 1000, ov.uC.value);
+      }
+      if (this.grade) {
+        this.grade.uniforms.uK.value = 1 - ov.uA.value;
+        this.grade.uniforms.uT.value = now / 1000;
+      }
+    }
 
     const ci = CHAPTERS.reduce((a, c, i) => (t >= c.at ? i : a), 0);
     if (ci !== this.chapter) {
@@ -1252,7 +1578,9 @@ export class RealHouse {
     cancelAnimationFrame(this.raf);
   }
 
+  private disposed = false;
   dispose() {
+    this.disposed = true;
     this.stop();
     this.disposables.forEach((d) => d.dispose());
     this.envRT?.dispose();
