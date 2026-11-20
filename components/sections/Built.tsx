@@ -11,7 +11,7 @@ export default function Built() {
         <div className="wrap">
           <RoomTag no="04" room="Gallery" label="Completed works" />
           <h2 id="built-h" className="display">
-            Three finished homes, with families living in them.
+            Finished projects, with families living in them.
           </h2>
           <p className="built__sub">Scroll to step through each doorway. These are photographs of finished work, not renders.</p>
         </div>
