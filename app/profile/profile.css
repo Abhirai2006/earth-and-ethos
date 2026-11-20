@@ -1,0 +1,38 @@
+@page { size: A4; margin: 0; }
+.pf { background: #fff; color: #1f2526; font-family: var(--font-sans); }
+.pf__page { width: 210mm; height: 297mm; padding: 16mm 15mm; box-sizing: border-box; page-break-after: always; overflow: hidden; background: #f4f1ea; margin: 0 auto 10mm; }
+.pf__top { display: grid; grid-template-columns: 16mm 1fr 60mm; gap: 6mm; align-items: center; border-bottom: 0.3mm solid #1f2526; padding-bottom: 6mm; }
+.pf__logo { width: 16mm; height: 19mm; }
+.pf .pf__brand { font-family: var(--font-display); font-size: 26pt; line-height: 1; margin: 0; }
+.pf .pf__tag { font-size: 9pt; margin: 2mm 0 0; color: #4a5254; }
+.pf .pf__motto { font-family: var(--font-display); font-style: italic; font-size: 11pt; color: #7a523b; margin: 0; text-align: right; }
+.pf__grid { display: grid; grid-template-columns: 1fr 62mm; gap: 9mm; margin-top: 7mm; }
+.pf h2 { font-family: var(--font-display); font-size: 15pt; margin: 4mm 0 2mm; font-weight: 400; }
+.pf p, .pf li, .pf dd { font-size: 8.8pt; line-height: 1.5; }
+.pf__process { padding-left: 0; list-style: none; margin: 0; }
+.pf__process li { margin-bottom: 1.6mm; }
+.pf__founder img { width: 100%; height: auto; border-radius: 2mm; }
+.pf .pf__name { font-family: var(--font-display); font-size: 15pt; margin: 3mm 0 0; }
+.pf .pf__role { margin: 0 0 3mm; color: #7a523b; font-weight: 600; }
+.pf__founder dl { margin: 0; border-top: 0.3mm solid #1f2526; }
+.pf__founder dl div { padding: 1.6mm 0; border-bottom: 0.2mm solid rgba(31,37,38,.25); }
+.pf__founder dt { font-size: 7pt; font-weight: 600; color: #4a5254; }
+.pf__founder dd { margin: 0; }
+.pf__h { border-bottom: 0.3mm solid #1f2526; padding-bottom: 2mm; }
+.pf__work { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-bottom: 6mm; }
+.pf__work--small { grid-template-columns: repeat(3, 1fr); }
+.pf__work figure { margin: 0; }
+.pf__work img { width: 100%; height: 44mm; object-fit: cover; display: block; }
+.pf__work--small img { height: 30mm; }
+.pf__work figcaption { font-size: 7.6pt; margin-top: 1.4mm; line-height: 1.35; }
+.pf__work figcaption b { display: block; font-size: 8.6pt; }
+.pf__contact { margin-top: 4mm; padding-top: 5mm; border-top: 0.3mm solid #1f2526; }
+.pf__contact ul { list-style: none; padding: 0; display: flex; gap: 8mm; flex-wrap: wrap; margin: 3mm 0; }
+.pf .pf__note { font-size: 7pt; color: #4a5254; }
+@media print { .pf__page { margin: 0; } header.header, .fab, .skip { display: none !important; } }
+.pf__page:last-child { page-break-after: auto; margin-bottom: 0; }
+.pf__values { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 6mm; margin-top: 2mm; }
+.pf__values h3 { font-family: var(--font-display); font-weight: 400; font-size: 12pt; margin: 0 0 1mm; }
+.pf__values p { margin: 0; }
+.pf .pf__contact .pf__brand { font-size: 20pt; }
+.pf__contact li { font-size: 10pt; font-weight: 600; }
