@@ -659,6 +659,66 @@
   ],
   "blur": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAAAwAgCdASoQAAwAA4BaJaACdAEDfT8VDQASAAD+72oCKQfLp1RK8oZ0WLz9+fzmH7G8JkeIr+rRldK/WTjO2U/4oueDWbCz0niqi5MxcAA="
  },
+ "banavara-vedike/drawing-sheet-1": {
+  "w": 2400,
+  "h": 3393,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAABwBACdASoQABcAPu1iqU2ppaOiMAgBMB2JYgCdL1yagJoYVqvAMMtOPZRjAAD+x4NZ7CPEAhO62C5fLAH7A1EHlr+z9qexB5dc6TNFi1kAjA/KMog+kQjFbqE5vTQb/EXGse0ffzH/lkFyrmsdz+fKecNdKpho732u5tzfFoy2bcOmWzY7F5HfbFEbODfiPTmvBanqOyLjHO6eI+JBcVaYfcAAAA=="
+ },
+ "banavara-vedike/drawing-sheet-2": {
+  "w": 2400,
+  "h": 3393,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACwAwCdASoQABcAPu1iqU2ppaOiMAgBMB2JQBOgA9Hoy66B4QFSwAD+5/qFBTd/ROD+hBXqksLy7pQRrd6mq9FT/xLxFyJ2GWO7MFKIrF1N0BXULU8QU0zOVWE3rV6rqLaBFv85oGbxxLKwiU+fm5L5CKed+ZDyB11GWDadLk0VvacQAAA="
+ },
+ "banavara-vedike/drawing-sheet-3": {
+  "w": 2400,
+  "h": 3393,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABwBACdASoQABcAPu1iqU2ppaOiMAgBMB2JQBOmUAS3wv9bDAWoQ+bN3eIQAAD+6yPYbCD07oAeNo6CgkkK8TR99b+FLjpmQBYSvPBSPf5ReDTgBWMDxkUhmK3En+JanhbinC/e3vvsBr3aodDwNDUzyPWdAYuKROwVg4UXpM00bG5VTg01Ye+FgQ/FUcbdJtrCVzZAwNc5ZtIXw/LAAA=="
+ },
+ "banavara-vedike/sheet-1": {
+  "w": 3643,
+  "h": 5150,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAABQBACdASoQABcAPu1iqU2ppaOiMAgBMB2JYgCdL1yVi8yYFTKYiRuplLfCAP7WK4yTDwZC6flY0eW3C3UTET5HhEcbzK8Y61RslbYIrEil95XyewbC4oidoaMrycP2CZVengkjbJYW4E6LxGaZhMtk+/1XCa+LD3qb2Za49bL/zfV40v0n8I0vVTpef80yqvqbbl/pdIFXocWiz8plFQJOVqwAAA=="
+ },
+ "banavara-vedike/sheet-2": {
+  "w": 3643,
+  "h": 5150,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAAAQBACdASoQABcAPu1iqU2ppaOiMAgBMB2JQBOgZYAxG7+UjQuIY0B4AAD+5/qFBTd/ROECa1KM7IB+bFdxkScTDtA/8xwKOus6IJFgM+/amkSo8MqEdxBTTM5VYlZn9qC2gUJcHefKGui64yM0n/NUM5KR9BOCqM5mcAaqPeb4CyhKAAA="
+ },
+ "banavara-vedike/sheet-3": {
+  "w": 3643,
+  "h": 5150,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABQBACdASoQABcAPu1iqU2ppaOiMAgBMB2JQBOmUAS34v9bDAWoQ+bNVk8AAP7rI9hsIPTugCaWjoKHSQrxNbDdr8RVO2ozd9D1+CybnnmMSkJ6+HYwJSGfCjExqSa+27UnPb1PX66A95z82LUg7fs4sDBthbexm0qrhw3jm4gDR3Yf3FdYhNgJj+ot28fQ19tYSubIGBrnLNpC+H5YAA=="
+ },
  "dasa-rangamandira/1": {
   "w": 1671,
   "h": 941,
@@ -1243,34 +1303,20 @@
   ],
   "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAABwAQCdASoQAAkAA4BaJQBOgA/hiAD+8W2LLlrYLYTE1hwdj69FOW/NXstedRq7E95f5NyMO4Z0sDdtBSK/VH8AAAA="
  },
- "stock/chikmagalur": {
-  "w": 2400,
-  "h": 3600,
+ "stories/athreya-line": {
+  "w": 1263,
+  "h": 1280,
   "widths": [
-   640,
-   1280,
-   1920
+   640
   ],
-  "blur": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JaACdMoR3ABHFIcn1DmcpAAD9GV7152YY3HyTj0jXkwq/yDPvqHpOYMn3sv57bDxmJSJjehj3tEIAcyrNDF0PFFUJqxlb/DMrkFLuPfwAAA=="
+  "blur": "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAAAQAgCdASoQABAAA4BaJZQCsAE1DpFOU44gAP6zPGMMHSnpSbhg2VgZmGMJV9Ke7VgM4jMOpFVAbuVovHmxGYpD5tCVuIAA"
  },
- "stock/courtyardtree": {
-  "w": 2400,
-  "h": 1600,
+ "stories/athreya-photo": {
+  "w": 1263,
+  "h": 1280,
   "widths": [
-   640,
-   1280,
-   1920
+   640
   ],
-  "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAQCdASoQAAsAA4BaJQAAVD5z5tjmgAD+3jWxnpeyUanHxZM7iNmHGLXYM+qdWXgrNPR86SlJDbX3FhWJ8ZsU0nJ1+Qf05R9v9531kJgQW1B/ybGd9gAA"
- },
- "stock/doorlight": {
-  "w": 2400,
-  "h": 3200,
-  "widths": [
-   640,
-   1280,
-   1920
-  ],
-  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACQAwCdASoQABUAPu1iqU2ppaQiMAgBMB2JZwDCgCHfw5QuakWAAP7yla0uSbuen1TvwsTGhCAcv0R02zfExLdSTXtPYV/8zilBAAAA"
+  "blur": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAACQAgCdASoQABAAA4BaJbACdH8AGEvmw3Gq0LqhAAD+8XpbU2HbWKn3ekvwIqG70b9/GX6cSQqK6hsI+W2Amzd/mpIze7JCjZjmFWTPvMuBxTMcnbMtFpVWhe085rElpCtBix8Le7GApE+mAAA="
  }
 }
