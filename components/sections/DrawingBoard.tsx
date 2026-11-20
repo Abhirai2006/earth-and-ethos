@@ -13,10 +13,10 @@ export default function DrawingBoard() {
           <RoomTag no="04" room="Drawing board" label="Ongoing works" />
           <h2 id="board-h" className="display">On the drawing board.</h2>
           <p>
-            Six projects in design and on site, from a family home in Kengeri to a performance centre and a
-            campus building in Hassan. Images are design visualisations.
+            Six projects being designed or built right now: homes, interiors, an office, a performance centre and
+            a college building in Hassan. The images are design renders.
           </p>
-          <p className="board__hint" aria-hidden="true">Keep scrolling to leaf through the sheets</p>
+          <p className="board__hint" aria-hidden="true">Keep scrolling to see each sheet</p>
         </div>
         {ongoing.map((p, i) => (
           <article key={p.slug} className="sheet">
