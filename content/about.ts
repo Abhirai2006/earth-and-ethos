@@ -2,7 +2,7 @@
 // Meaning and facts unchanged; nothing added.
 export const about = {
   intro: [
-    "We think of architecture as more than putting up buildings. It is about making places where people, nature, culture and everyday life come together.",
+    "We believe a truly sustainable building is one that does not fight nature: it works with it. Where sunlight lights every corner, cross ventilation cools every room, and the design itself does the work of keeping you comfortable.",
     "Earth & Ethos is an architecture and design practice. We believe every space should have a purpose, a personality and an identity that lasts. Our work brings together contemporary design, careful planning, a feel for materials and an understanding of the site, so that a building looks good and works well.",
     "We don't design to follow trends. A good building responds to where it stands, suits the people who live in it, and still makes sense years later.",
   ],
