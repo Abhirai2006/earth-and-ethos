@@ -41,6 +41,10 @@ export const site = {
 } as const;
 
 export const web3formsKey = process.env.NEXT_PUBLIC_WEB3FORMS_KEY ?? "";
+/** Cloudflare Web Analytics token (cookie-free). Leave empty to load nothing. */
+export const cfBeaconToken = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN ?? "";
+/** Google Search Console "HTML tag" verification code (the content="..." value). */
+export const googleVerification = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? "";
 
 export const absoluteUrl = (path = "/") =>
   new URL(path.endsWith("/") || path.includes(".") ? path : `${path}/`, site.url).toString();
