@@ -2752,3 +2752,32 @@ h2[id] {
   display: block;
   white-space: nowrap;
 }
+
+/* ── phones and tablets: ongoing works stacked, one clear sheet after another ── */
+.board__outer:not([data-pinned="1"]) .board__track {
+  flex-direction: column;
+  align-items: stretch;
+  overflow: visible;
+  scroll-snap-type: none;
+  gap: 28px;
+  padding-bottom: 0;
+}
+.board__outer:not([data-pinned="1"]) .board__lead,
+.board__outer:not([data-pinned="1"]) .sheet {
+  width: auto;
+  max-width: 760px;
+}
+.board__outer:not([data-pinned="1"]) .board__hint {
+  display: none;
+}
+
+/* ── hero: the opening line drawing is shown as a picture straight away, so the
+   screen is never empty while the 3D house loads; the live scene fades in over it */
+.hero[data-mode="3d"] .hero__sticky {
+  background: var(--print) url("/images/brand/hero-blueprint-d.webp") center / auto 100% no-repeat;
+}
+@media (max-aspect-ratio: 4/5) {
+  .hero[data-mode="3d"] .hero__sticky {
+    background-image: url("/images/brand/hero-blueprint-m.webp");
+  }
+}
