@@ -10,7 +10,7 @@ export default function DrawingBoard() {
     <section id="drawing-board" className="board" data-tone="dark" aria-labelledby="board-h">
       <DrawingBoardTrack>
         <div className="board__lead">
-          <RoomTag no="04" room="Drawing board" label="Ongoing works" />
+          <RoomTag no="06" room="Drawing board" label="Ongoing works" />
           <h2 id="board-h" className="display">On the drawing board.</h2>
           <p>
             Six projects being designed or built right now: homes, interiors, an office, a performance centre and
