@@ -110,6 +110,8 @@ export class RealHouse {
   private doorR = new THREE.Group();
   private swing = new THREE.Group();
   private pendants: THREE.PointLight[] = [];
+  private diyas: { light: THREE.PointLight; flame: THREE.Mesh; phase: number }[] = [];
+  private shrineGlow?: { wash: THREE.PointLight; halo: THREE.ShaderMaterial; box: THREE.MeshBasicMaterial; base: THREE.Color };
   private shafts!: THREE.Mesh;
   private motes!: THREE.Points;
   private interior = new THREE.Group();
@@ -591,7 +593,7 @@ export class RealHouse {
       }
       this.swing.userData.L = L;
     }
-    this.box(I, 2.2, 0.5, 2.2, 5.2, 0.3, -4.1, paver, { edges: false });
+    this.box(I, 2.2, 0.5, 2.2, 6.5, 0.3, -4.6, paver, { edges: false });
     this.box(I, 0.6, 0.45, 3.6, 0.3, 0.3, 0.6, timber, { edges: false });
     this.box(I, 0.04, 1.6, 1.2, 8.15, 2.0, -1.2, this.std(0x9c4a2f, undefined, { roughness: 0.8 }), { edges: false });
     this.box(I, 0.04, 1.2, 0.9, 8.15, 2.2, -2.7, this.std(0x6f7f63, undefined, { roughness: 0.8 }), { edges: false });
@@ -614,7 +616,8 @@ export class RealHouse {
     this.disposables.push(leafMat);
     const trees: [number, number, number][] = [[-12, 6, 1.45], [-15.5, -6, 1.8], [18.5, 4, 1.4], [20, -8, 1.9], [-4, -16, 2.0], [12, -17, 1.7], [-8.5, 12.5, 1.1]];
     trees.forEach(([x, z, s], i) => this.tree(W, x, z, s, bark, leafMat, hq ? 480 : 200, 31 + i));
-    this.tree(I, 5.2, -4.1, 0.62, bark, leafMat, hq ? 120 : 60, 77, 0.8);
+    this.tree(I, 6.5, -4.6, 0.62, bark, leafMat, hq ? 160 : 70, 77, 0.8);
+    this.buildShrine(I, timber, brass);
 
     // grass: individual blades, swaying in a travelling gust
     {
@@ -779,6 +782,106 @@ export class RealHouse {
     cards.castShadow = true;
     cards.receiveShadow = true;
     parent.add(cards);
+  }
+
+  /**
+   * Ganesha facing the entrance: a backlit lotus mandala in teak, set on a
+   * smooth lime-plaster panel in the brick wall, with two brass diyas below.
+   * The glow is physical too: a light box behind the cut-outs and a point light
+   * between panel and wall that washes the plaster.
+   */
+  private buildShrine(I: THREE.Object3D, timber: THREE.Material, brass: THREE.Material) {
+    const cx = 4.1, cy = 2.12, wallZ = -7.7, R = 0.56;
+    const plasterPanel = this.std(0xb9ae9e, "plaster");
+    this.box(I, 2.1, 2.5, 0.025, cx, 0.9, wallZ + 0.012, plasterPanel, { edges: false, cast: false });
+    // ledge
+    this.box(I, 1.5, 0.05, 0.28, cx, 1.06, wallZ + 0.16, timber, { edges: false });
+
+    const tex = TX.ganeshaMandala(this.hq ? 1024 : 512);
+    this.disposables.push(tex.outer, tex.inner);
+    const panelMat = (map: THREE.Texture) => {
+      const m = new THREE.MeshStandardMaterial({ map, alphaTest: 0.5, roughness: 0.7, side: THREE.DoubleSide });
+      this.disposables.push(m);
+      return m;
+    };
+    const disc = new THREE.CircleGeometry(R, 96);
+    const discIn = new THREE.CircleGeometry(R * 0.44, 72);
+    this.disposables.push(disc, discIn);
+    const outer = new THREE.Mesh(disc, panelMat(tex.outer));
+    outer.position.set(cx, cy, wallZ + 0.07);
+    outer.castShadow = true;
+    const inner = new THREE.Mesh(discIn, panelMat(tex.inner));
+    inner.position.set(cx, cy, wallZ + 0.09);
+    inner.castShadow = true;
+    // panel edges, so it has thickness when seen at an angle
+    const rimGeo = new THREE.CylinderGeometry(R, R, 0.018, 96, 1, true);
+    rimGeo.rotateX(Math.PI / 2);
+    const rimInGeo = new THREE.CylinderGeometry(R * 0.44, R * 0.44, 0.018, 72, 1, true);
+    rimInGeo.rotateX(Math.PI / 2);
+    this.disposables.push(rimGeo, rimInGeo);
+    const rimMat = this.std(0x4f321f, undefined, { roughness: 0.75 });
+    const rim = new THREE.Mesh(rimGeo, rimMat);
+    rim.position.set(cx, cy, wallZ + 0.061);
+    const rimIn = new THREE.Mesh(rimInGeo, rimMat);
+    rimIn.position.set(cx, cy, wallZ + 0.081);
+    I.add(outer, inner, rim, rimIn);
+
+    // the light box behind the cut-outs (bright enough to bloom)
+    const glowCol = new THREE.Color(1.0, 0.62, 0.3); // deep amber: stays warm after tone mapping
+    const boxMat = new THREE.MeshBasicMaterial({ color: glowCol.clone().multiplyScalar(7) });
+    this.disposables.push(boxMat);
+    const lightBox = new THREE.Mesh(new THREE.CircleGeometry(R * 0.97, 72), boxMat);
+    lightBox.position.set(cx, cy, wallZ + 0.04);
+    I.add(lightBox);
+    // halo on the wall: falls off with distance from the rim
+    const haloMat = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      uniforms: { uC: { value: glowCol }, uA: { value: 1 } },
+      vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }",
+      fragmentShader: `uniform vec3 uC; uniform float uA; varying vec2 vUv;
+        void main(){
+          float r = length(vUv - 0.5) * 2.0;          // 0 centre, 1 edge of quad
+          float ring = smoothstep(0.32, 0.4, r);      // hidden behind the panel
+          float fall = exp(-max(r - 0.38, 0.0) * 5.5);
+          gl_FragColor = vec4(uC * 1.2, ring * fall * 0.6 * uA);
+        }`,
+    });
+    this.disposables.push(haloMat);
+    const halo = new THREE.Mesh(new THREE.PlaneGeometry(R * 2 / 0.38, R * 2 / 0.38), haloMat);
+    halo.position.set(cx, cy, wallZ + 0.03);
+    I.add(halo);
+    const wash = new THREE.PointLight(0xffb878, 0, 1.8, 2);
+    wash.position.set(cx, cy, wallZ + 0.12);
+    I.add(wash);
+    this.shrineGlow = { wash, halo: haloMat, box: boxMat, base: glowCol };
+
+    // two brass standing diyas with living flames
+    const profile = [
+      [0, 0], [0.055, 0], [0.06, 0.01], [0.03, 0.025], [0.014, 0.04], [0.012, 0.11], [0.022, 0.125],
+      [0.012, 0.135], [0.016, 0.14], [0.055, 0.16], [0.06, 0.175], [0.05, 0.17], [0, 0.165],
+    ].map(([x, y]) => new THREE.Vector2(x, y));
+    const lampGeo = new THREE.LatheGeometry(profile, 28);
+    this.disposables.push(lampGeo);
+    const flameGeo = new THREE.SphereGeometry(0.011, 12, 10);
+    flameGeo.scale(1, 2.6, 1);
+    this.disposables.push(flameGeo);
+    const flameMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.0, 0.62, 0.22).multiplyScalar(9) });
+    this.disposables.push(flameMat);
+    this.diyas = [];
+    for (const side of [-1, 1]) {
+      const x = cx + side * 0.5;
+      const lamp = new THREE.Mesh(lampGeo, brass);
+      lamp.position.set(x, 1.085, wallZ + 0.17);
+      lamp.castShadow = true;
+      const flame = new THREE.Mesh(flameGeo, flameMat);
+      flame.position.set(x + 0.045, 1.085 + 0.2, wallZ + 0.17);
+      const light = new THREE.PointLight(0xffa25a, 0, 3, 2);
+      light.position.set(x + 0.045, 1.33, wallZ + 0.24);
+      I.add(lamp, flame, light);
+      this.diyas.push({ light, flame, phase: side * 1.7 });
+    }
   }
 
   // shafts of sun through the pergola, and dust motes that only glow inside them
@@ -1001,6 +1104,21 @@ export class RealHouse {
     const lamps = smooth(range(t, 0.44, 0.6));
     for (const g of this.glows) g.emissiveIntensity = lamps * 3.2;
     for (const pl of this.pendants) pl.intensity = lamps * 9;
+    {
+      // flames flicker from turbulence: several incommensurate frequencies
+      const sec = now / 1000;
+      for (const d of this.diyas) {
+        const fl = 1 + 0.09 * Math.sin(sec * 13.1 + d.phase) + 0.06 * Math.sin(sec * 23.7 + 1.3 * d.phase) + 0.04 * Math.sin(sec * 41.3 + 2.1);
+        d.light.intensity = 0.8 * fl;
+        d.flame.scale.set(1, 0.92 + (fl - 1) * 1.6, 1);
+      }
+      if (this.shrineGlow) {
+        // the LED backlight breathes very slightly, never flashes
+        const b = 1 + 0.03 * Math.sin(sec * 0.6);
+        this.shrineGlow.wash.intensity = 0.6 * b;
+        this.shrineGlow.halo.uniforms.uA.value = b;
+      }
+    }
     if (this.bloom) this.bloom.strength = 0.05 + lamps * 0.3;
 
     // 5. the door swings open on its hinges and settles
