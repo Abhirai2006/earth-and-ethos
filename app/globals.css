@@ -1071,7 +1071,7 @@ html.no-intro .intro {
 .pass__photo {
   width: 100%;
   height: auto;
-  aspect-ratio: 634 / 720;
+  aspect-ratio: 880 / 940;
   object-fit: cover;
   object-position: 50% 0;
   border-radius: 8px;
@@ -2605,4 +2605,16 @@ section[id],
 article[id],
 h2[id] {
   scroll-margin-top: calc(var(--header-h) + 8px);
+}
+
+.kn__reach {
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+  display: grid;
+  gap: 6px;
+}
+.kn__reach a {
+  color: var(--cream);
+  text-underline-offset: 4px;
 }
