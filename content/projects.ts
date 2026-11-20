@@ -40,10 +40,10 @@ export const projects: Project[] = [
     status: "completed",
     typology: "Residence",
     summary:
-      "A family home where a perforated brick screen wraps the stair, warm clay-red ceilings run through the lobbies, and carved timber frames the pooja room.",
+      "A family home with a brick jaali screening the staircase, clay-red ceilings in the lobbies and a carved timber pooja doorway.",
     description: [
-      "Athreya Mane is a multi-storey family home in Padmanabhanagar. From the street, white plastered volumes are cut by a tall brick jaali that screens the staircase — open enough for light and air, solid enough for privacy.",
-      "Inside, the same warmth carries through: clay-red ceilings and a filler-slab roof overhead, light-grey floors underfoot, and lobbies on each floor that double as places to sit. A carved timber doorway marks the pooja room as the heart of the house.",
+      "Athreya Mane is a family home in Padmanabhanagar, several floors high. From the street you see white plastered walls and a tall brick jaali in front of the staircase. It lets in light and air but still keeps the stair private.",
+      "Inside, the ceilings are clay-red, including a filler-slab ceiling above the stair, and the floors are light grey. Each floor has a lobby wide enough to sit in. The pooja room sits behind a carved timber doorway at the centre of the house.",
     ],
     features: ["Brick jaali stair screen", "Filler-slab ceiling", "Carved timber pooja doorway", "Open lobbies on every floor"],
     cover: { k: A + "8a413548", alt: "Athreya Mane at dusk: white plastered volumes with a tall perforated brick screen, lit from within" },
@@ -74,10 +74,10 @@ export const projects: Project[] = [
     status: "completed",
     typology: "Residence",
     summary:
-      "Exposed brick, a pergola skylight that draws stripes of sun across a double-height hall, and a brick jaali that turns afternoon light into pattern.",
+      "A brick house built around a double-height hall, with a pergola skylight that throws stripes of sun across the walls.",
     description: [
-      "Gurukrupa is a family home in Hosakerehalli built around a double-height hall. A pergola skylight above it lets bands of sunlight move across exposed brick through the day.",
-      "Brick is the constant material — as feature walls in the hall and along the stair, and as a projecting jaali whose staggered bricks cast a shifting pattern of light and shadow. Terracotta-tiled terraces with a pergola open the house to the sky above.",
+      "Gurukrupa is a family home in Hosakerehalli. The middle of the house is a double-height hall, and a pergola skylight above it sends bands of sunlight across the brick walls as the day goes on.",
+      "Brick is used everywhere: on the walls of the hall and the stair, and in a projecting jaali whose staggered bricks cast patterns of light and shade. Up on the roof, the terraces are finished in terracotta tiles with a pergola overhead.",
     ],
     features: ["Double-height hall with pergola skylight", "Projecting brick jaali", "Exposed brick feature walls", "Terracotta-tiled roof terraces"],
     cover: { k: G + "20240617-074433", alt: "Projecting brick jaali at Gurukrupa, its staggered bricks catching the afternoon sun" },
@@ -103,10 +103,10 @@ export const projects: Project[] = [
     typology: "Apartment interiors",
     scope: "Interior design",
     summary:
-      "An apartment planned to feel generous: soft cove lighting, arched textured panels in the living room, and every corner given a use.",
+      "An apartment interior planned so every room flows into the next, with soft cove lighting and arched panels in the living room.",
     description: [
-      "A complete interior design for a family apartment. Layouts were planned to keep rooms flowing into each other without clutter, so the home feels larger than its footprint.",
-      "A warm palette of light timber, textured stone-look panels and concealed cove lighting ties the rooms together — from the arched niches in the living room to the backlit vanity and the modular kitchen.",
+      "We designed the full interior of this family apartment. The layout keeps rooms opening into each other without clutter, so the home feels bigger than it is.",
+      "Light timber, textured wall panels and hidden cove lighting run through the whole flat, from the arched niches in the living room to the backlit mirror in the bathroom and the modular kitchen.",
     ],
     features: ["Space planning", "Cove and accent lighting", "Arched textured wall panels", "Modular kitchen and wardrobes"],
     cover: { k: Y + "20240915-213357", alt: "Living room of the Yamoksh Residence with arched textured panels, cove-lit ceiling and tan sofas" },
@@ -130,10 +130,10 @@ export const projects: Project[] = [
     status: "ongoing",
     typology: "Cultural & performance centre",
     summary:
-      "A home for performance and learning: a timber-ribbed auditorium, sunlit rehearsal halls hung with traditional art, and a terracotta façade.",
+      "A centre for performance and learning, with a timber-ribbed auditorium, bright rehearsal halls and a terracotta front.",
     description: [
-      "D.A.S.A Rangamandira brings an auditorium, rehearsal and workshop halls, a conference room and administrative spaces under one roof.",
-      "The façade pairs terracotta-red brickwork with sage plaster and white folk-art motifs. Inside, sweeping timber ribs shape the auditorium ceiling, while long day-lit halls with traditional paintings give dancers and musicians room to rehearse.",
+      "D.A.S.A Rangamandira puts an auditorium, rehearsal and workshop halls, a conference room and offices under one roof.",
+      "The front of the building is terracotta-red brick and sage plaster, with white folk-art patterns. Inside, curved timber ribs shape the auditorium ceiling, and the long rehearsal halls get plenty of daylight, with traditional paintings on the walls.",
     ],
     features: ["Auditorium with timber-ribbed ceiling", "Day-lit rehearsal halls", "Folk-art façade motifs", "Planted circulation aisles"],
     renders: true,
@@ -161,10 +161,10 @@ export const projects: Project[] = [
     typology: "Community dining hall & guest house",
     client: "SKSSP Trust",
     summary:
-      "A dining hall and a guest house (Guru Nivasa) built the traditional way: Mangalore-tile roofs, brick jaali walls, local materials and louvres for shade and breeze.",
+      "A dining hall and a guest house, Guru Nivasa, built the traditional way with Mangalore-tile roofs, brick jaali walls and local materials.",
     description: [
-      "Designed for SKSSP Trust, Banavara Vedike pairs a 40′ × 60′ dining hall (bhojanalaya) with Guru Nivasa, a two-storey guest house.",
-      "Both buildings draw on the region's own vocabulary: traditional Mangalore-tile roofs, brick jaali walls, simple columns, and a combination of exposed brick and plaster. Locally sourced materials, louvred shading for airflow, and planning for good ventilation and daylight keep them comfortable without relying on machines.",
+      "Banavara Vedike is for SKSSP Trust. It has two buildings: a 40′ × 60′ dining hall (bhojanalaya) and Guru Nivasa, a two-storey guest house.",
+      "Both use the building traditions of the region: Mangalore-tile roofs, brick jaali walls, simple columns, and exposed brick mixed with plaster. Local materials, louvres for shade and airflow, and good cross-ventilation and daylight keep them comfortable without depending on machines.",
     ],
     features: ["Mangalore-tile roofs", "Brick jaali walls", "Brick and plaster combination", "Local materials", "Louvres for airflow and shade"],
     renders: true,
@@ -186,10 +186,10 @@ export const projects: Project[] = [
     status: "ongoing",
     typology: "Institutional building",
     summary:
-      "A two-storey institutional building on the Malnad College of Engineering campus, with a deep-roofed entrance and long bands of glazing set in a calm grid.",
+      "A two-storey building for the ME RIISE Foundation on the Malnad College of Engineering campus.",
     description: [
       "An institutional building for the ME RIISE Foundation at Malnad College of Engineering, Hassan.",
-      "A rhythm of piers and long glazed bands gives the two-storey façade a calm order, while a deep entrance canopy and landscaped forecourt make arrival generous.",
+      "The two-storey front is a steady rhythm of piers and long bands of glass. A deep canopy over the entrance and a planted forecourt make arriving feel easy.",
     ],
     features: ["Gridded façade with glazing bands", "Deep entrance canopy", "Landscaped forecourt"],
     renders: true,
@@ -202,19 +202,19 @@ export const projects: Project[] = [
   },
   {
     slug: "veena-mahesh-home",
-    title: "Veena–Mahesh Home",
+    title: "Veena-Mahesh Home",
     location: "Kengeri, Bengaluru",
     status: "ongoing",
     typology: "Residence",
     summary:
-      "A house with soft, curved corners and perforated screens outside — and inside, warm timber, sage cabinetry and rooms washed in afternoon light.",
+      "A house with rounded corners and perforated screens outside, and warm timber and a sage-green kitchen inside.",
     description: [
-      "A family home in Kengeri. The exterior rounds its corners into curved balconies, layered with perforated screens that filter light and views.",
-      "Inside, timber joinery, a sage-green kitchen and generous windows keep the palette warm and the rooms bright.",
+      "A family home in Kengeri. The corners of the house curve into rounded balconies, wrapped in perforated screens that filter light and views.",
+      "Inside, there is timber joinery, a sage-green kitchen and large windows that keep the rooms bright.",
     ],
     features: ["Curved balconies and screens", "Timber joinery", "Sage kitchen", "Daylit living spaces"],
     renders: true,
-    cover: { k: V + "view-c", alt: "Visualisation of the Veena–Mahesh Home with curved balconies and an arched gateway", render: true },
+    cover: { k: V + "view-c", alt: "Visualisation of the Veena-Mahesh Home with curved balconies and an arched gateway", render: true },
     gallery: [
       { k: V + "view-a", alt: "Visualisation of the curved corner elevation with perforated screens", render: true },
       { k: V + "view-b", alt: "Visualisation of the front elevation with rounded terraces", render: true },
@@ -234,10 +234,10 @@ export const projects: Project[] = [
     typology: "Home interiors",
     scope: "Interior design",
     summary:
-      "Bedrooms and a kitchen in light timber and woven textures, with sheer curtains that let the morning in.",
+      "Bedrooms and a kitchen in light timber and woven textures, with sheer curtains that let the morning light in.",
     description: [
       "Interior design for a family home in Ullala.",
-      "Woven-texture wall panels, light timber beds and wardrobes, and sheer curtains give each bedroom a calm, sunlit character. The kitchen continues the same timber in its cabinetry.",
+      "The bedrooms have woven-texture wall panels, light timber beds and wardrobes, and sheer curtains, which keeps them calm and full of daylight. The kitchen uses the same timber.",
     ],
     features: ["Woven-texture wall panelling", "Light timber joinery", "Sheer, layered window treatments"],
     renders: true,
@@ -257,10 +257,10 @@ export const projects: Project[] = [
     status: "ongoing",
     typology: "Office building",
     summary:
-      "A compact office of brick and white plaster, wrapped in vertical fins that shade the glazing, with a canopied roof terrace on top.",
+      "A compact office in brick and white plaster, shaded by vertical fins, with a covered terrace on the roof.",
     description: [
-      "An office building in Jakkur. A brick core is wrapped by white plastered floors and a screen of vertical fins that shade the glass from the sun.",
-      "A tensile canopy turns the roof into usable outdoor space; at night, light washing the fins gives the building a quiet presence on the street.",
+      "An office building in Jakkur. A brick core is wrapped in white plastered floors, and a row of vertical fins shades the glass from the sun.",
+      "A tensile canopy turns the roof into usable outdoor space. At night, lights wash over the fins.",
     ],
     features: ["Vertical shading fins", "Brick and white plaster", "Canopied roof terrace", "Façade lighting"],
     renders: true,
