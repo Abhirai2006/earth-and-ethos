@@ -1242,5 +1242,35 @@
    1280
   ],
   "blur": "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAABwAQCdASoQAAkAA4BaJQBOgA/hiAD+8W2LLlrYLYTE1hwdj69FOW/NXstedRq7E95f5NyMO4Z0sDdtBSK/VH8AAAA="
+ },
+ "stock/chikmagalur": {
+  "w": 2400,
+  "h": 3600,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JaACdMoR3ABHFIcn1DmcpAAD9GV7152YY3HyTj0jXkwq/yDPvqHpOYMn3sv57bDxmJSJjehj3tEIAcyrNDF0PFFUJqxlb/DMrkFLuPfwAAA=="
+ },
+ "stock/courtyardtree": {
+  "w": 2400,
+  "h": 1600,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAQCdASoQAAsAA4BaJQAAVD5z5tjmgAD+3jWxnpeyUanHxZM7iNmHGLXYM+qdWXgrNPR86SlJDbX3FhWJ8ZsU0nJ1+Qf05R9v9531kJgQW1B/ybGd9gAA"
+ },
+ "stock/doorlight": {
+  "w": 2400,
+  "h": 3200,
+  "widths": [
+   640,
+   1280,
+   1920
+  ],
+  "blur": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAACQAwCdASoQABUAPu1iqU2ppaQiMAgBMB2JZwDCgCHfw5QuakWAAP7yla0uSbuen1TvwsTGhCAcv0R02zfExLdSTXtPYV/8zilBAAAA"
  }
 }
