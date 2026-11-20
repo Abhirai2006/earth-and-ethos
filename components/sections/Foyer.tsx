@@ -1,4 +1,5 @@
 import { about } from "@/content/about";
+import Motto from "@/components/ui/Motto";
 import { site } from "@/lib/site";
 import RoomTag from "@/components/ui/RoomTag";
 
@@ -28,7 +29,7 @@ export default function Foyer() {
             </li>
           ))}
         </ol>
-        <p className="foyer__motto">{site.motto}</p>
+        <Motto className="foyer__motto" text={site.motto} />
       </div>
     </section>
   );
