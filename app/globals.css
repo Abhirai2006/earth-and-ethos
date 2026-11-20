@@ -571,10 +571,11 @@ html.no-intro .intro {
   display: none;
 }
 
-/* ── hero: the walk-in ───────────────────────────────────────── */
+/* ── hero: the walk-in (real photographs) ─────────────────────── */
 .hero {
+  --p: 0;
   position: relative;
-  height: 640vh;
+  height: 620vh;
   background: var(--print);
   color: var(--cream);
 }
@@ -585,6 +586,23 @@ html.no-intro .intro {
   height: 100svh;
   overflow: hidden;
 }
+.hero__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-size: cover;
+  animation: heroSettle 2.6s var(--ease) both;
+}
+@keyframes heroSettle {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
 .hero__canvas {
   position: absolute;
   inset: 0;
@@ -592,28 +610,28 @@ html.no-intro .intro {
   height: 100%;
   display: block;
   opacity: 0;
-  transition: opacity 1s var(--ease);
+  transition: opacity 0.9s var(--ease);
 }
 .hero[data-ready="1"] .hero__canvas {
   opacity: 1;
 }
-.hero__poster {
-  display: none;
-}
 .hero__scrim {
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
-  background: linear-gradient(to top, rgba(16, 20, 21, 0.62), rgba(16, 20, 21, 0.12) 46%, transparent 62%),
-    linear-gradient(to bottom, rgba(16, 20, 21, 0.35), transparent 18%);
+  background: linear-gradient(to top, rgba(14, 18, 19, 0.7), rgba(14, 18, 19, 0.15) 42%, transparent 60%),
+    linear-gradient(to bottom, rgba(14, 18, 19, 0.45), transparent 20%);
 }
-.hero__title,
-.hero__cap {
+.hero__title {
   position: absolute;
+  z-index: 2;
   left: var(--gutter);
   right: var(--gutter);
-  bottom: clamp(88px, 13vh, 140px);
+  bottom: clamp(96px, 14vh, 150px);
   max-width: 1100px;
+  opacity: calc(1 - var(--p) * 18);
+  transform: translate3d(0, calc(var(--p) * -900px), 0);
   will-change: opacity, transform;
 }
 .hero__eyebrow {
@@ -631,6 +649,7 @@ html.no-intro .intro {
   font-size: var(--fs-hero);
   line-height: 0.9;
   letter-spacing: -0.02em;
+  text-shadow: 0 2px 40px rgba(0, 0, 0, 0.3);
 }
 .hero__services {
   font-size: clamp(1rem, 1.6vw, 1.35rem);
@@ -638,32 +657,70 @@ html.no-intro .intro {
   margin-top: 14px;
 }
 .hero__intro {
-  max-width: 34em;
-  margin-top: 18px;
+  max-width: 30em;
+  margin-top: 16px;
   color: var(--cream-2);
 }
-.hero__cap {
-  opacity: 0;
-  visibility: hidden;
+.hero__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: var(--paper);
+  pointer-events: none;
+  opacity: clamp(0, calc((var(--p) - 0.94) * 16.7), 1);
 }
-.hero__kicker {
-  display: block;
+.hero[data-mode="static"] .hero__veil {
+  display: none;
+}
+/* one quiet line: where you are, and whose house it is */
+.hero__credit {
+  position: absolute;
+  z-index: 2;
+  left: var(--gutter);
+  bottom: 26px;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
   font-size: var(--fs-small);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.hero.is-walking .hero__credit {
+  opacity: 1;
+  transform: none;
+}
+.hero__count {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.hero__count i {
+  font-style: normal;
+  color: var(--cream-2);
+}
+.hero__room {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.hero__proj {
+  color: var(--cream-2);
+  text-decoration: none;
+}
+.hero__proj b {
   font-weight: 600;
   color: var(--tan);
-  margin-bottom: 10px;
+  margin-right: 6px;
 }
-.hero__cap p {
-  font-family: var(--font-display);
-  font-size: clamp(2.2rem, 6vw, 5.6rem);
-  line-height: 0.98;
-  max-width: 13em;
-  margin: 0;
-  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35);
-  text-wrap: balance;
+.hero__proj:hover {
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .hero__cue {
   position: absolute;
+  z-index: 2;
   left: 50%;
   bottom: 22px;
   transform: translateX(-50%);
@@ -673,6 +730,10 @@ html.no-intro .intro {
   font-size: var(--fs-micro);
   font-weight: 600;
   letter-spacing: 0.04em;
+  transition: opacity 0.4s;
+}
+.hero.is-walking .hero__cue {
+  opacity: 0;
 }
 .hero__cue i {
   width: 1px;
@@ -695,18 +756,21 @@ html.no-intro .intro {
 }
 .hero__hud {
   position: absolute;
+  z-index: 2;
   right: var(--gutter);
-  bottom: 26px;
-  display: grid;
-  justify-items: end;
-  gap: 8px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hero__skip {
   font-size: var(--fs-micro);
   font-weight: 600;
   color: var(--cream-2);
-  font-variant-numeric: tabular-nums;
+  text-underline-offset: 3px;
 }
 .hero__bar {
-  width: 120px;
+  width: 110px;
   height: 1px;
   background: var(--line-dark);
 }
@@ -716,88 +780,47 @@ html.no-intro .intro {
   transform-origin: left;
   transform: scaleX(0);
 }
-.hero__skip {
-  position: absolute;
-  left: var(--gutter);
-  bottom: 26px;
-  font-size: var(--fs-micro);
-  font-weight: 600;
-  color: var(--cream-2);
-  text-underline-offset: 3px;
-}
-.hero__veil {
-  position: absolute;
-  inset: 0;
-  background: var(--paper);
-  opacity: 0;
-  pointer-events: none;
-}
 @media (max-width: 760px) {
   .hero {
-    height: 540vh;
+    height: 520vh;
   }
   .hero__cue {
     display: none;
   }
+  .hero__credit {
+    flex-wrap: wrap;
+    gap: 4px 10px;
+    right: 150px;
+  }
+  .hero__proj {
+    flex-basis: 100%;
+  }
+  .hero__bar {
+    width: 64px;
+  }
 }
-/* static fallback (reduced motion / no WebGL) */
+/* static (reduced motion / no WebGL): one beautiful frame, no scroll choreography */
 .hero[data-mode="static"] {
   height: auto;
 }
 .hero[data-mode="static"] .hero__sticky {
   position: relative;
-  height: auto;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 120px 0 90px;
+  height: 100svh;
+  min-height: 560px;
+  background: var(--print) url("/images/brand/hero-poster-1920.webp") center / cover no-repeat;
 }
 .hero[data-mode="static"] .hero__canvas,
 .hero[data-mode="static"] .hero__cue,
-.hero[data-mode="static"] .hero__hud,
-.hero[data-mode="static"] .hero__veil {
+.hero[data-mode="static"] .hero__bar {
   display: none;
 }
-.hero[data-mode="static"] .hero__poster {
-  display: block;
-  position: absolute;
-  inset: 0;
-}
-.hero[data-mode="static"] .hero__poster img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 .hero[data-mode="static"] .hero__title {
-  position: relative;
-  bottom: auto;
-  left: auto;
-  right: auto;
-  padding: 0 var(--gutter);
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: none !important;
+  opacity: 1;
+  transform: none;
 }
-.hero[data-mode="static"] .hero__captions {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 32px var(--gutter) 0;
-}
-.hero[data-mode="static"] .hero__cap {
-  position: relative;
-  inset: auto;
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: none !important;
-}
-.hero[data-mode="static"] .hero__cap p {
-  font-size: clamp(1.3rem, 2vw, 1.7rem);
-}
-.hero[data-mode="static"] .hero__scrim {
-  background: linear-gradient(to top, rgba(16, 20, 21, 0.85), rgba(16, 20, 21, 0.2) 70%);
+.hero[data-mode="static"] .hero__credit {
+  opacity: 1;
+  transform: none;
 }
 
 /* ── foyer (about) ───────────────────────────────────────────── */
@@ -2005,6 +2028,9 @@ html.no-intro .intro {
   }
   .hero {
     height: auto;
+  }
+  .hero__poster {
+    animation: none;
   }
   .door {
     height: auto;
