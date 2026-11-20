@@ -87,6 +87,13 @@ export default function Hero() {
       house.setNight(n, true);
       setNight(n);
       house.onReady = () => setReady(true);
+      house.onFail = () => {
+        io.disconnect();
+        house?.dispose();
+        house = null;
+        houseRef.current = null;
+        setMode("static");
+      };
       house.onChapter = (i) => setChapter(i);
       house.resize(cv.clientWidth, cv.clientHeight);
       paint();
