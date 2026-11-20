@@ -7,7 +7,6 @@ import JsonLd from "@/components/JsonLd";
 import Footer from "@/components/sections/Footer";
 import { pageMeta, projectLd } from "@/lib/seo";
 import { toLb } from "@/lib/lightbox";
-import { imageSet } from "@/lib/images";
 import { site } from "@/lib/site";
 
 export const dynamicParams = false;
@@ -25,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${p.title}: ${p.typology}${where}`,
     description: `${p.summary} ${p.status === "completed" ? "Completed" : "Ongoing"} project by Earth & Ethos, ${site.city}.`.slice(0, 300),
     path: `/work/${p.slug}/`,
-    image: imageSet(p.cover.k).src.replace(/-\d+\.webp$/, "-1280.webp"),
+    image: `/og/${p.slug}.jpg`,
   });
 }
 
