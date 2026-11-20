@@ -250,10 +250,10 @@ export function leafCard(size = 256): THREE.Texture {
 }
 
 /**
- * Backlit lotus mandala with a Ganesha cut-out (an original design).
+ * Backlit lotus mandala (an original design).
  * Returns two RGBA textures whose transparent areas are cut through:
  *  - outer: a disc with two staggered rings of 16 lotus petals
- *  - inner: a smaller raised disc with the Ganesha silhouette
+ *  - inner: a smaller raised disc with an eight-petal lotus
  * Panel colour is a warm teak; the light comes from behind.
  */
 export function ganeshaMandala(size = 1024) {
@@ -342,37 +342,25 @@ export function ganeshaMandala(size = 1024) {
     ring.arc(c, c, R * 0.9, 0, Math.PI * 2);
     ring.arc(c, c, R * 0.885, 0, Math.PI * 2, true);
     cut(g, ring);
-    // Ganesha: each part cut separately so thin ribs of panel hold the shape together
-    g.save();
-    const k = (S * 0.72) / 200;
-    g.translate(c - 100 * k, c - 116 * k);
-    g.scale(k, k);
-    const parts = [
-      "M70 90 C52 72 26 70 14 88 C8 98 12 106 9 116 C6 128 14 136 14 146 C16 160 34 168 52 160 C48 150 56 142 62 134 Z",
-      "M130 90 C148 72 174 70 186 88 C192 98 188 106 191 116 C194 128 186 136 186 146 C184 160 166 168 148 160 C152 150 144 142 138 134 Z",
-      "M100 84 C124 84 140 94 141 110 C142 126 134 138 122 145 C116 148 108 149 100 149 C92 149 84 148 78 145 C66 138 58 126 59 110 C60 94 76 84 100 84 Z",
-      "M64 70 H136 Q138 77 134 78 H66 Q62 77 64 70 Z",
-      "M70 66 C72 56 82 52 100 52 C118 52 128 56 130 66 Z",
-      "M80 50 C82 43 89 40 100 40 C111 40 118 43 120 50 Z",
-      "M100 14 C106 21 107 28 100 35 C93 28 94 21 100 14 Z",
-      "M88 152 C86 176 92 196 108 210 C122 222 144 216 144 200 C144 188 130 185 126 194 C124 200 118 201 114 196 C106 184 110 168 112 152 Z",
-      "M119 150 C129 154 133 164 129 173 C124 165 120 159 115 155 Z",
-    ];
-    g.save();
-    g.globalCompositeOperation = "destination-out";
-    for (const d of parts) g.fill(new Path2D(d));
-    g.restore();
-    // ribs between overlapping parts, as a real cut panel needs
-    g.strokeStyle = PANEL;
-    g.lineWidth = 3.2;
-    g.lineJoin = "round";
-    for (const i of [2, 3, 4, 5, 7, 8]) g.stroke(new Path2D(parts[i]));
-    // eyes and tilak stay as solid panel inside the face
+    // an eight-petal lotus with a seed-pod centre (the statue in front carries the figure)
+    const M = 8, st = (Math.PI * 2) / M;
+    for (let i = 0; i < M; i++) {
+      cut(g, petal(c, c, i * st - Math.PI / 2, R * 0.3, R * 0.8, st * 0.36));
+      cut(g, petal(c, c, i * st + st / 2 - Math.PI / 2, R * 0.28, R * 0.6, st * 0.3));
+    }
+    const seed = new Path2D();
+    seed.arc(c, c, R * 0.2, 0, Math.PI * 2);
+    cut(g, seed);
     g.fillStyle = PANEL;
-    g.fill(new Path2D("M80 110 Q87 104 94 110 Q87 114 80 110 Z"));
-    g.fill(new Path2D("M106 110 Q113 104 120 110 Q113 114 106 110 Z"));
-    g.fill(new Path2D("M97.5 90 H102.5 L101.6 104 H98.4 Z"));
-    g.restore();
+    for (let i = 0; i < 7; i++) {
+      const a = (i / 7) * Math.PI * 2;
+      g.beginPath();
+      g.arc(c + Math.cos(a) * R * 0.11, c + Math.sin(a) * R * 0.11, R * 0.028, 0, Math.PI * 2);
+      g.fill();
+    }
+    g.beginPath();
+    g.arc(c, c, R * 0.03, 0, Math.PI * 2);
+    g.fill();
   });
   return { outer, inner };
 }
