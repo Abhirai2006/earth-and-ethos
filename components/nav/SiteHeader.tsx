@@ -84,7 +84,7 @@ export default function SiteHeader() {
   return (
     <>
       <header className={`header header--${tone}${hidden ? " is-hidden" : ""}${open ? " is-open" : ""}`}>
-        <Link href="/" className="header__brand" aria-label="Earth & Ethos — home">
+        <Link href="/" className="header__brand" aria-label="Earth & Ethos home page">
           <LogoMark className="header__mark" title={null} />
           <span className="header__name">Earth &amp; Ethos</span>
         </Link>
@@ -141,7 +141,7 @@ export default function SiteHeader() {
               ))}
               <li>
                 <Link href="/work/" onClick={() => setOpen(false)}>
-                  <span className="menu__no">—</span>
+                  <span className="menu__no" aria-hidden="true">+</span>
                   <span className="menu__room">Archive</span>
                   <span className="menu__label">All projects</span>
                 </Link>
