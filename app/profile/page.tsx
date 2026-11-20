@@ -47,7 +47,7 @@ export default function Profile() {
           </div>
           <aside className="pf__founder">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/founder/santhosh-634.webp" width={634} height={826} alt={`Portrait of ${site.founder.title}`} />
+            <img src="/images/founder/santhosh-880.webp" width={880} height={1000} alt={`Portrait of ${site.founder.title}`} />
             <p className="pf__name">{site.founder.title}</p>
             <p className="pf__role">{site.founder.role}</p>
             <dl>
