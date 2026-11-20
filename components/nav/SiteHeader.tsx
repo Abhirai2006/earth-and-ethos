@@ -94,6 +94,9 @@ export default function SiteHeader() {
               </span>
             </div>
           )}
+          <Link href={pathname.startsWith("/kn") ? "/" : "/kn/"} className="header__lang" hrefLang={pathname.startsWith("/kn") ? "en-IN" : "kn-IN"} lang={pathname.startsWith("/kn") ? "en" : "kn"}>
+            {pathname.startsWith("/kn") ? "English" : "ಕನ್ನಡ"}
+          </Link>
           <Link href={href("desk")} className="btn btn--solid header__cta">
             Start a project
           </Link>
