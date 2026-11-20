@@ -43,7 +43,7 @@ export const testimonials: Testimonial[] = [
     ],
   },
   {
-    name: "Mr. Yamksh Verma",
+    name: "Mr. Yamoksh Verma",
     role: "Apartment interiors",
     quote:
       "Santhosh transformed our house into a home that is both beautiful and highly functional. Every layout decision was well-thought-out.",
