@@ -84,7 +84,6 @@ export default function EnquiryForm({ accessKey, fallbackEmail }: { accessKey: s
             <option>Interiors</option>
             <option>Renovation or rebuild</option>
             <option>Institutional or commercial building</option>
-            <option>Planning or site supervision</option>
             <option>Something else</option>
           </select>
         </div>
