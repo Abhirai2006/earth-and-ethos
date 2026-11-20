@@ -5,7 +5,8 @@ import SiteHeader from "@/components/nav/SiteHeader";
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import JsonLd from "@/components/JsonLd";
 import { organizationLd, pageMeta } from "@/lib/seo";
-import { site } from "@/lib/site";
+import { site, cfBeaconToken, googleVerification } from "@/lib/site";
+import WhatsAppFab from "@/components/ui/WhatsAppFab";
 
 const display = Instrument_Serif({
   subsets: ["latin"],
@@ -39,6 +40,8 @@ export const metadata: Metadata = {
   ],
   formatDetection: { telephone: false },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
+  ...(googleVerification ? { verification: { google: googleVerification } } : {}),
+  alternates: { ...pageMeta({}).alternates, languages: { "en-IN": site.url + "/", "kn-IN": site.url + "/kn/" } },
 };
 
 export const viewport: Viewport = {
@@ -63,7 +66,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteHeader />
         <SmoothScroll />
         <main id="main">{children}</main>
+        <WhatsAppFab />
         <JsonLd data={organizationLd()} />
+        {cfBeaconToken && (
+          <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: cfBeaconToken })} />
+        )}
       </body>
     </html>
   );
