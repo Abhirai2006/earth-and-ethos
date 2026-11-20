@@ -1,41 +1,40 @@
-// Source: ABOUT.docx (client-supplied). Lightly edited for the web —
-// meaning and claims unchanged.
+// Source: ABOUT.docx (client-supplied), rewritten in plain language.
+// Meaning and facts unchanged; nothing added.
 export const about = {
-  lede: "Designing spaces. Shaping experiences. Creating meaning.",
   intro: [
-    "At Earth & Ethos, we believe architecture is more than the creation of buildings — it is the art of shaping spaces that connect people, nature, culture, and everyday life.",
-    "We are an architecture and design practice driven by the belief that every space should have a purpose, a personality, and a lasting sense of identity. Contemporary design, thoughtful planning, material sensitivity and an understanding of context come together in spaces that are visually compelling and functionally meaningful.",
-    "Good design should not simply follow trends. It should respond to its surroundings, reflect the people who inhabit it, and stand the test of time.",
+    "We think of architecture as more than putting up buildings. It is about making places where people, nature, culture and everyday life come together.",
+    "Earth & Ethos is an architecture and design practice. We believe every space should have a purpose, a personality and an identity that lasts. Our work brings together contemporary design, careful planning, a feel for materials and an understanding of the site, so that a building looks good and works well.",
+    "We don't design to follow trends. A good building responds to where it stands, suits the people who live in it, and still makes sense years later.",
   ],
   pillars: [
     {
       n: "01",
       title: "Vision",
-      body: "To shape a built environment that is meaningful, enduring and deeply connected to its context — spaces that inspire, nurture and enrich the way people live, work and interact.",
+      body: "To build places that mean something, last a long time and belong to their surroundings. Places that make the way people live, work and spend time together a little better.",
     },
     {
       n: "02",
       title: "Philosophy",
-      body: "Architecture is a dialogue between people, place and purpose. Every site has a story, every material has a character, and every space holds the potential to create an experience.",
+      body: "Every site has a story and every material has a character. We look for the balance between the contemporary and the local, between form and function, between simplicity and detail.",
     },
     {
       n: "03",
       title: "Approach",
-      body: "It begins with listening — to the client, the site and its surroundings. Those insights become concepts shaped by spatial planning, natural light, materiality and proportion. Every decision is intentional.",
+      body: "We start by listening: to you, to the site and to what's around it. Then we work through the plan, the daylight, the materials and the proportions until every decision has a reason behind it.",
     },
     {
       n: "04",
       title: "Ethos",
-      body: "Authenticity over excess, timelessness over trends, meaningful design over mere appearance. Spaces that belong — to their people, their place and their time.",
+      body: "Honest rather than showy. Lasting rather than fashionable. We want our buildings to belong to their people, their place and their time.",
     },
   ],
   founder: {
-    heading: "An architect shaped by nature, culture, and the art of observation.",
+    heading: "An architect shaped by nature, culture and a habit of looking closely.",
     paragraphs: [
-      "Born and brought up in Chikmagalur, amidst the rolling landscapes of the Western Ghats and the quiet beauty of coffee blossoms, Santhosh K S developed an early appreciation for the relationship between people, nature and their surroundings.",
-      "With a background in music and the arts, he sees architecture as more than its technical side — as a medium of observation, interpretation and expression that brings together creativity, context and human experience.",
-      "Having watched the climate, cultural landscape and way of life in Chikmagalur slowly change, he grew interested in vernacular architecture and traditional ways of living — not as reflections of the past, but as lessons for a more conscious future.",
-      "Through Earth & Ethos, he brings that vision to life: context-responsive, sustainable spaces that honour their roots while embracing what comes next.",
+      "Santhosh grew up in Chikmagalur, among the hills of the Western Ghats and the coffee estates. Growing up there gave him an early sense of how closely people, nature and place depend on each other.",
+      "He also has a background in music and the arts, so for him architecture is more than a technical job. It is a way of observing how people live, and responding to it.",
+      "Over the years he watched the climate, culture and way of life in Chikmagalur change. That made him curious about vernacular architecture and traditional ways of living, which he sees as useful lessons for building more thoughtfully today.",
+      "He started Earth & Ethos to put this into practice: sustainable buildings that fit their context, respect their roots and still look ahead.",
     ],
     facts: [
       { k: "B.Arch", v: "BMS College of Architecture, 2023" },
