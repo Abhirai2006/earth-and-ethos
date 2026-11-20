@@ -84,3 +84,25 @@ npm run images   # re-process photos: reads ../_raw/<folder>/*  → public/image
 - `sitemap.xml` (with image entries), `robots.txt`, web manifest, icons
 - JSON-LD: `ProfessionalService` (studio and founder) on every page, plus `CreativeWork` and `BreadcrumbList` per project
 - Descriptive alt text on every image; one `<h1>` per page; semantic landmarks
+
+## Still needed from the studio (placeholders are in place until then)
+
+| What | Where it goes | Until then |
+| --- | --- | --- |
+| WhatsApp number (digits with country code) | `lib/site.ts` → `contact.whatsapp` | The floating button says "Message us" and opens the contact form |
+| Phone, email, street address, hours, Maps link | `lib/site.ts` → `contact` | Hidden on the site and left out of Google's structured data |
+| Instagram / LinkedIn links | `lib/site.ts` → `social` | Hidden |
+| Web3Forms key | Cloudflare variable `NEXT_PUBLIC_WEB3FORMS_KEY` | Form shows a "not connected yet" message |
+| Cloudflare Web Analytics token | Cloudflare variable `NEXT_PUBLIC_CF_BEACON_TOKEN` | No analytics load |
+| Google Search Console verification code | Cloudflare variable `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | No verification tag |
+| Real before/after photos (e.g. Gautham R Avadhani's rebuild) | `../_raw/stories/` + `content/stories.ts` | A line study traced from the Athreya Mane photo, captioned as an illustration |
+| Drawings for other projects (plans, sections) | `drawings` in `content/projects.ts` | Only Banavara Vedike has drawings (contact box blurred) |
+| Higher-resolution founder portrait | `public/images/founder/` | The supplied 317 × 413 px photo, backdrop recoloured to the brand tan |
+| Kannada review by a native speaker | `content/kn.ts` | My translation |
+
+After changing any studio details, run `npm run build && npm run profile` so the PDF picks them up.
+
+## Google Business Profile and Search Console (one-time)
+1. Search Console → Add property → URL prefix `https://earthandethosarchitects.com/` → HTML tag → paste the code into the Cloudflare variable above → redeploy → Verify.
+2. Sitemaps → submit `sitemap.xml`.
+3. business.google.com → add "Earth & Ethos", category "Architect", the same address and phone as `lib/site.ts`, website link, and upload project photos.
