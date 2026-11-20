@@ -18,7 +18,7 @@ export const site = {
   founder: {
     name: "Santhosh K S",
     title: "Ar. Santhosh K S",
-    role: "Founder & Principal Architect",
+    role: "Founder",
   },
 
   contact: {
@@ -28,7 +28,7 @@ export const site = {
     streetAddress: "", // TODO studio street address (optional)
     postalCode: "", // TODO
     mapsUrl: "", // TODO Google Maps share link (optional)
-    hours: "", // TODO e.g. "Mon–Sat, 10:00–18:30"
+    hours: "", // TODO e.g. "Mon to Sat, 10:00 to 18:30"
   },
 
   social: {
