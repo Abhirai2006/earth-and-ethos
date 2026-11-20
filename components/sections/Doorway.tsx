@@ -3,7 +3,7 @@
 import { ReactNode, useRef } from "react";
 import { useScrollProgress } from "@/lib/useScrollProgress";
 
-/** A doorway that opens to full-bleed as you scroll — walking into the project. */
+/** A doorway that opens to full-bleed as you scroll, like walking into the project. */
 export default function Doorway({ children, info, index }: { children: ReactNode; info: ReactNode; index: number }) {
   const ref = useRef<HTMLElement>(null);
   useScrollProgress(ref, (p) => {
