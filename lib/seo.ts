@@ -4,7 +4,7 @@ import type { Project } from "@/content/projects";
 import { imageSet } from "./images";
 
 export const defaultDescription =
-  "Earth & Ethos is a Bengaluru architecture, planning and interior design studio led by Ar. Santhosh K S — context-responsive, sustainable homes and buildings rooted in Karnataka's vernacular craft.";
+  "Earth & Ethos is an architecture, planning and interior design studio in Bengaluru, led by Ar. Santhosh K S. We design sustainable homes and buildings that draw on Karnataka's traditional ways of building.";
 
 export function pageMeta({
   title,
