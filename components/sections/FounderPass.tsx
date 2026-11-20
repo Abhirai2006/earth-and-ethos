@@ -193,11 +193,11 @@ export default function FounderPass() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           className="pass__photo"
-          src="/images/founder/santhosh-634.webp"
-          srcSet="/images/founder/santhosh-317.webp 317w, /images/founder/santhosh-634.webp 634w"
-          sizes="240px"
-          width={634}
-          height={826}
+          src="/images/founder/santhosh-880.webp"
+          srcSet="/images/founder/santhosh-440.webp 440w, /images/founder/santhosh-880.webp 880w"
+          sizes="250px"
+          width={880}
+          height={1000}
           alt={`Portrait of ${site.founder.title}, founder of Earth & Ethos`}
           draggable={false}
         />
