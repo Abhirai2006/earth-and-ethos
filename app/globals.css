@@ -13,8 +13,8 @@
   --sheet: #f7f5ef;
   --ink: #1f2526;
   --ink-2: #4a5254; /* 7.6:1 on paper */
-  --night: #161c1e;
-  --print: #1b2427; /* blueprint */
+  --night: #272c2e; /* dark grey, never pure black */
+  --print: #2f3436; /* blueprint sheet: dark grey */
   --cream: #f2ede4;
   --cream-2: #c9c3b8; /* 9:1 on night */
   --line-dark: rgba(242, 237, 228, 0.16);
@@ -676,12 +676,6 @@ html.no-intro .intro {
   transform: translate3d(0, calc(var(--p) * -900px), 0);
   will-change: opacity, transform;
 }
-.hero__eyebrow {
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--tan);
-  margin-bottom: 14px;
-}
 .hero h1 {
   display: flex;
   flex-direction: column;
@@ -732,14 +726,6 @@ html.no-intro .intro {
 .hero.is-walking .hero__credit {
   opacity: 1;
   transform: none;
-}
-.hero__count {
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.hero__count i {
-  font-style: normal;
-  color: var(--cream-2);
 }
 .hero__room {
   font-family: var(--font-display);
@@ -1106,16 +1092,6 @@ html.no-intro .intro {
   margin-top: 8px;
   background: repeating-linear-gradient(90deg, var(--ink) 0 12px, transparent 12px 24px);
   opacity: 0.7;
-}
-.pass__hint {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  text-align: center;
-  font-size: var(--fs-micro);
-  font-weight: 600;
-  color: var(--ink-2);
 }
 @media (max-width: 900px) {
   .founder__pass {
@@ -2290,7 +2266,7 @@ html.no-intro .intro {
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
   gap: 0 clamp(14px, 2vw, 28px);
   border-top: 1px solid var(--ink);
 }
