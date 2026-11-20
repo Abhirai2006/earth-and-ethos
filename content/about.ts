@@ -6,26 +6,27 @@ export const about = {
     "Earth & Ethos is an architecture and design practice. We believe every space should have a purpose, a personality and an identity that lasts. Our work brings together contemporary design, careful planning, a feel for materials and an understanding of the site, so that a building looks good and works well.",
     "We don't design to follow trends. A good building responds to where it stands, suits the people who live in it, and still makes sense years later.",
   ],
+  // Vision, philosophy, approach and ethos: the client's own wording (Nov 2026)
   pillars: [
     {
       n: "01",
       title: "Vision",
-      body: "To build places that mean something, last a long time and belong to their surroundings. Places that make the way people live, work and spend time together a little better.",
+      body: "We create regenerative architecture that anchors communities, respects the land, and elevates the way people live and work.",
     },
     {
       n: "02",
       title: "Philosophy",
-      body: "Every site has a story and every material has a character. We look for the balance between the contemporary and the local, between form and function, between simplicity and detail.",
+      body: "True permanence comes from working with nature, not against it. We unite vernacular wisdom, low-carbon materials, and modern precision.",
     },
     {
       n: "03",
       title: "Approach",
-      body: "We start by listening: to you, to the site and to what's around it. Then we work through the plan, the daylight, the materials and the proportions until every decision has a reason behind it.",
+      body: "We begin by listening: to our clients, the climate, and the land. From there, we resolve every detail through passive design, natural light, and sustainable materials so nothing is wasted.",
     },
     {
       n: "04",
       title: "Ethos",
-      body: "Honest rather than showy. Lasting rather than fashionable. We want our buildings to belong to their people, their place and their time.",
+      body: "Honest rather than showy. Timeless rather than fashionable. Every building we make is an act of stewardship, belonging wholly to its people, its place, and its time.",
     },
   ],
   founder: {
