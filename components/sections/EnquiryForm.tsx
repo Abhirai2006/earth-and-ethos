@@ -52,7 +52,7 @@ export default function EnquiryForm({ accessKey, fallbackEmail }: { accessKey: s
     return (
       <div className="form__done" role="status">
         <p className="display">Thank you.</p>
-        <p>Your message is on the desk. Expect a reply within two working days.</p>
+        <p>We&rsquo;ve got your message and will reply soon.</p>
         <button className="link" onClick={() => setState("idle")}>Send another message</button>
       </div>
     );
