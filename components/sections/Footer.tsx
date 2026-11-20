@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Motto from "@/components/ui/Motto";
 import LogoMark from "@/components/Logo";
 import { site } from "@/lib/site";
 
@@ -13,7 +14,7 @@ export default function Footer() {
             <p className="footer__word">Earth &amp; Ethos</p>
             <p className="footer__tag">{site.tagline}</p>
           </div>
-          <p className="footer__motto">{site.motto}</p>
+          <Motto className="footer__motto" text={site.motto} />
         </div>
         <div className="footer__cols">
           <nav aria-label="Footer">
