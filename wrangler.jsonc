@@ -1,4 +1,6 @@
 {
+  // Ships the static export in ./out as a Cloudflare Worker with static assets.
+  // Build first (npm run build), then `npx wrangler deploy`.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "earth-and-ethos",
   "compatibility_date": "2026-11-18",
