@@ -51,4 +51,7 @@ export const kn = {
   english: "English",
   viewProject: "ಯೋಜನೆಯನ್ನು ನೋಡಿ",
   city: "ಬೆಂಗಳೂರು, ಕರ್ನಾಟಕ",
+  phone: "ಫೋನ್",
+  whatsapp: "ವಾಟ್ಸಾಪ್‌ನಲ್ಲಿ ಸಂದೇಶ ಕಳುಹಿಸಿ",
+  email: "ಇಮೇಲ್",
 };
