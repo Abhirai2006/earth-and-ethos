@@ -9,7 +9,7 @@ export default function Foyer() {
         <RoomTag no="01" room="Foyer" label="About the studio" />
         <h2 id="foyer-h" className="display foyer__lede">
           You&rsquo;re inside now.
-          <span>Welcome to a practice that designs from the ground up.</span>
+          <span>Here is who we are and how we work.</span>
         </h2>
         <div className="foyer__cols">
           <p className="foyer__big">{about.intro[0]}</p>
