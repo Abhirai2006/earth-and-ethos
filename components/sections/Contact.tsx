@@ -10,10 +10,10 @@ export default function Contact() {
       <div className="wrap desk__grid">
         <div className="desk__head">
           <RoomTag no="07" room="Front desk" label="Contact" />
-          <h2 id="desk-h" className="display">Have a site in mind? Let&rsquo;s walk it together.</h2>
+          <h2 id="desk-h" className="display">Have a site in mind? Let&rsquo;s talk.</h2>
           <p>
-            Tell us a little about your plot, your home or your building. Every project starts with a
-            conversation, and with listening.
+            Tell us about your plot, your home or your building. We&rsquo;ll get back to you and find a time to
+            talk it through.
           </p>
           <ul className="desk__list">
             {c.email && (
