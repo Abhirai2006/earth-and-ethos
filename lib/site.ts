@@ -9,7 +9,10 @@ export const site = {
   legalName: "Earth & Ethos", // TODO: confirm registered name (S&E registration certificate)
   tagline: "Architecture | Planning | Interiors",
   motto: "Rooted in purpose. Guided by design. Built to inspire.",
-  url: "https://earthandethosarchitects.com",
+  // Set NEXT_PUBLIC_SITE_URL in Cloudflare to the address the site is live on
+  // (e.g. https://portfolio.earth-and-ethos.workers.dev until the domain is connected).
+  // Link previews, canonical URLs and the sitemap all use it.
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://earthandethosarchitects.com").replace(/\/$/, ""),
   locale: "en_IN",
   city: "Bengaluru",
   region: "Karnataka",
