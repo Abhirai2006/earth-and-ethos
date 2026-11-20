@@ -1,6 +1,7 @@
 import { about } from "@/content/about";
 import { site } from "@/lib/site";
 import RoomTag from "@/components/ui/RoomTag";
+import FounderPass from "./FounderPass";
 
 // Deterministic "topographic" lines — a nod to the Western Ghats he grew up in.
 function contours() {
@@ -31,7 +32,10 @@ export default function Founder() {
         ))}
       </svg>
       <div className="wrap founder__grid">
-        <div className="founder__head">
+        <div className="founder__pass">
+          <FounderPass />
+        </div>
+        <div className="founder__text">
           <RoomTag no="02" room="Study" label="Meet the founder" />
           <p className="founder__ar">Ar.</p>
           <h2 id="founder-h" className="display founder__name">
@@ -39,19 +43,24 @@ export default function Founder() {
           </h2>
           <p className="founder__role">{site.founder.role}</p>
           <p className="founder__quote">{f.heading}</p>
-        </div>
-        <div className="founder__body">
-          {f.paragraphs.map((p) => (
-            <p key={p.slice(0, 24)}>{p}</p>
-          ))}
-          <dl className="titleblock">
-            {f.facts.map((x) => (
-              <div key={x.k}>
-                <dt>{x.k}</dt>
-                <dd>{x.v}</dd>
-              </div>
+          <div className="founder__body">
+            {f.paragraphs.map((p) => (
+              <p key={p.slice(0, 24)}>{p}</p>
             ))}
-          </dl>
+            <dl className="titleblock">
+              {f.facts.map((x) => (
+                <div key={x.k}>
+                  <dt>{x.k}</dt>
+                  <dd>{x.v}</dd>
+                </div>
+              ))}
+            </dl>
+            <p className="founder__profile">
+              <a className="btn btn--ghost-dark" href="/earth-and-ethos-studio-profile.pdf" download>
+                Download the studio profile (PDF)
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </section>
