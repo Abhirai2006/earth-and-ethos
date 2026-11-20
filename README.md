@@ -65,7 +65,8 @@ npm run images   # re-process photos: reads ../_raw/<folder>/*  → public/image
    - Build command: `npm run build`
    - Deploy command: `npx wrangler deploy`
    - Build output directory: leave empty (it is set in `wrangler.jsonc`, `"directory": "./out"`)
-   - Variables and secrets: `NODE_VERSION = 22`, `NEXT_PUBLIC_WEB3FORMS_KEY = <your key>`
+   - Variables and secrets: `NODE_VERSION = 22`, `NEXT_PUBLIC_WEB3FORMS_KEY = <your key>`,
+     `NEXT_PUBLIC_SITE_URL = https://portfolio.earth-and-ethos.workers.dev` (change it to the real domain once it is connected)
    - Do **not** let Cloudflare run its Next.js auto-setup; with `wrangler.jsonc` in the repo it is skipped.
 3. **Contact form:** go to web3forms.com, enter the studio email, and copy the access key into the variable above,
    then redeploy. (For local testing, put it in `.env.local`; see `.env.example`.)
@@ -106,3 +107,8 @@ After changing any studio details, run `npm run build && npm run profile` so the
 1. Search Console → Add property → URL prefix `https://earthandethosarchitects.com/` → HTML tag → paste the code into the Cloudflare variable above → redeploy → Verify.
 2. Sitemaps → submit `sitemap.xml`.
 3. business.google.com → add "Earth & Ethos", category "Architect", the same address and phone as `lib/site.ts`, website link, and upload project photos.
+
+## Link previews (WhatsApp, LinkedIn, X)
+Every page has a 1200 x 630 JPEG preview: `public/og.jpg` for the home page and `public/og/<project>.jpg` for each project
+(regenerate with `npm run og`). Previews only work when `NEXT_PUBLIC_SITE_URL` matches the address the site is live on.
+WhatsApp caches previews: after a change, share the link with `?v=2` on the end to see the new one.
