@@ -86,6 +86,19 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           </LightboxGroup>
         </section>
 
+        {p.drawings && p.drawings.length > 0 && (
+          <section className="proj__drawings wrap" aria-labelledby="drawings-h" data-tone="light">
+            <h2 id="drawings-h" className="page__h2">Drawings</h2>
+            <LightboxGroup items={p.drawings.map((g) => toLb(g.k, g.alt))} className="dgrid">
+              {p.drawings.map((g, i) => (
+                <button key={g.k} type="button" className="dgrid__item" data-lb={i} aria-label={`Enlarge: ${g.alt}`}>
+                  <Picture k={g.k} alt={g.alt} sizes="(min-width: 900px) 30vw, 92vw" />
+                </button>
+              ))}
+            </LightboxGroup>
+          </section>
+        )}
+
         <nav className="proj__next" aria-label="Next project" data-tone="dark">
           <Link href={`/work/${next.slug}/`} className="wrap">
             <span>Next door</span>
