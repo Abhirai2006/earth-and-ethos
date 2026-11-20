@@ -25,17 +25,17 @@ export const site = {
   },
 
   contact: {
-    email: "", // TODO e.g. hello@earthandethosarchitects.com
-    phone: "", // TODO e.g. +91 90000 00000  (shown as written, dialled without spaces)
-    whatsapp: "", // TODO digits only with country code, e.g. 919000000000
-    streetAddress: "", // TODO studio street address (optional)
-    postalCode: "", // TODO
-    mapsUrl: "", // TODO Google Maps share link (optional)
+    email: "earthandethosarchitects@gmail.com",
+    phone: "+91 78922 56399", // shown as written, dialled without spaces
+    whatsapp: "917892256399", // digits only, with country code
+    streetAddress: "#25 Gurukrupa, Ground Floor, 1st Cross, 2nd Phase, 7th Block, Hosakerehalli, Banashankari 3rd Stage",
+    postalCode: "560085",
+    mapsUrl: "https://maps.app.goo.gl/voDMnPYjLzh7jDWT8",
     hours: "", // TODO e.g. "Mon to Sat, 10:00 to 18:30"
   },
 
   social: {
-    instagram: "", // TODO full URL
+    instagram: "https://www.instagram.com/earth_and_ethos_architects/",
     linkedin: "", // TODO full URL
   },
 
