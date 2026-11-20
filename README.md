@@ -8,9 +8,16 @@ Next.js 16 (App Router), fully static export, deployed on Cloudflare Pages.
 The page is a house you walk into.
 
 1. **Opening.** The logo draws itself as a line drawing.
-2. **Walk-in (hero).** A procedural 3D building (three.js, no model files) starts as a blueprint line
-   drawing, rises in brick, lime, timber and stone while the logo's sun comes up, then its doors open and you
-   walk into a double-height hall with a brick wall, pergola skylight, mezzanine and an oonjal.
+2. **Walk-in (hero).** A physically rendered house (three.js, `components/hero/RealHouse.ts`, no model files).
+   It starts as a line drawing, then a construction time-lapse follows real rules:
+   - a physical sky, with the sun moving from morning to late afternoon so the shadows sweep across the facade,
+   - walls laid in 85 mm brick courses,
+   - jaali bricks and timber fins dropping into place under gravity, with dust where they land,
+   - roof concrete that dries from dark to pale.
+   Then the doors swing open on a spring and you walk into the hall. Inside there are sunlight shafts through the
+   pergola, dust that glows only in the sun, and a swing moving with a pendulum's natural period, while the
+   exposure adjusts the way your eyes do indoors. Grass and trees move in the wind. All textures are generated in
+   code (`components/hero/textures.ts`). On slow GPUs the scene drops to lighter settings by itself.
 3. After that, every section is a room on a floor plan (the **Floor plan** menu shows where you are):
    - **Foyer:** about the studio
    - **Study:** the founder
@@ -53,21 +60,23 @@ npm run images   # re-process photos: reads ../_raw/<folder>/*  → public/image
 ## Deploy: GitHub → Cloudflare Pages → GoDaddy domain
 
 1. Push this folder to a GitHub repo (GitHub Desktop is fine).
-2. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git**, pick the repo.
-   - Framework preset: **Next.js (Static HTML Export)**
+2. Cloudflare dashboard → **Workers & Pages → Create → Import a repository**, pick the repo.
+   The site deploys as a Worker with static assets (see `wrangler.jsonc`), so use these settings:
    - Build command: `npm run build`
-   - Build output directory: `out`
-   - Environment variables: `NODE_VERSION = 22`, `NEXT_PUBLIC_WEB3FORMS_KEY = <your key>`
+   - Deploy command: `npx wrangler deploy`
+   - Build output directory: leave empty (it is set in `wrangler.jsonc`, `"directory": "./out"`)
+   - Variables and secrets: `NODE_VERSION = 22`, `NEXT_PUBLIC_WEB3FORMS_KEY = <your key>`
+   - Do **not** let Cloudflare run its Next.js auto-setup; with `wrangler.jsonc` in the repo it is skipped.
 3. **Contact form:** go to web3forms.com, enter the studio email, and copy the access key into the variable above,
    then redeploy. (For local testing, put it in `.env.local`; see `.env.example`.)
-4. **Domain:** Pages project → **Custom domains → Set up a domain** → `earthandethosarchitects.com`, and add
-   `www` too. The easiest route is to move the domain's DNS to Cloudflare: add the site in Cloudflare, then in
+4. **Domain:** Worker → **Settings → Domains & Routes → Add → Custom domain** → `earthandethosarchitects.com`, and add
+   `www.earthandethosarchitects.com` too. The easiest route is to move the domain's DNS to Cloudflare: add the site in Cloudflare, then in
    GoDaddy → *Domain → DNS → Nameservers → Change* paste the two Cloudflare nameservers. Alternatively keep
    GoDaddy DNS and add the CNAME record Cloudflare shows you.
 5. **SEO after launch:** add the domain in Google Search Console, submit `https://earthandethosarchitects.com/sitemap.xml`,
    and create or claim a Google Business Profile with the same name, address and phone as `lib/site.ts`.
 
-`public/_headers` sets caching and security headers on Cloudflare.
+`public/_headers` sets caching and security headers (supported by Workers static assets).
 
 ## What's built in for SEO
 - Static HTML for every page (crawlers see all text, no JS required)
