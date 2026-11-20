@@ -10,7 +10,10 @@ export default function WhatsAppFab() {
     const onScroll = () => {
       const hero = document.getElementById("top");
       const limit = hero ? hero.offsetHeight - window.innerHeight * 0.5 : 300;
-      setShow(window.scrollY > limit);
+      // stay out of the way at the front desk, which has its own WhatsApp link and the form
+      const desk = document.getElementById("desk")?.getBoundingClientRect();
+      const atDesk = !!desk && desk.top < window.innerHeight * 0.85 && desk.bottom > window.innerHeight * 0.2;
+      setShow(window.scrollY > limit && !atDesk);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
