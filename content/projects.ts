@@ -42,12 +42,13 @@ export const projects: Project[] = [
     status: "completed",
     typology: "Residence",
     summary:
-      "A family home with a brick jaali screening the staircase, clay-red ceilings in the lobbies and a carved timber pooja doorway.",
+      "A spacious 5 BHK home across three floors, where natural light and ventilation shape the architecture, built with Porotherm blocks, Kota stone and filler slabs.",
+    // description: the client's own text (Nov 2026)
     description: [
-      "Athreya Mane is a family home in Padmanabhanagar, several floors high. From the street you see white plastered walls and a tall brick jaali in front of the staircase. It lets in light and air but still keeps the stair private.",
-      "Inside, the ceilings are clay-red, including a filler-slab ceiling above the stair, and the floors are light grey. Each floor has a lobby wide enough to sit in. The pooja room sits behind a carved timber doorway at the centre of the house.",
+      "A spacious 5 BHK residence thoughtfully organised across the ground and two upper floors, where natural light and ventilation are integral to the architectural expression. The design brings together traditional sensibilities and contemporary aesthetics, creating spaces that are both rooted and progressive.",
+      "Porotherm blocks are incorporated as an efficient walling solution, while Kota stone flooring introduces a natural, durable finish. The use of filler slab construction further explores material-conscious building techniques, reducing concrete consumption while adding a distinctive character to the ceilings. Together, these choices reflect an approach to architecture that values resource efficiency, material honesty, thermal comfort and timeless living.",
     ],
-    features: ["Brick jaali stair screen", "Filler-slab ceiling", "Carved timber pooja doorway", "Open lobbies on every floor"],
+    features: ["Porotherm block walls", "Kota stone flooring", "Filler-slab ceilings", "Brick jaali stair screen", "Carved timber pooja doorway"],
     cover: { k: A + "8a413548", alt: "Athreya Mane at dusk: white plastered volumes with a tall perforated brick screen, lit from within" },
     gallery: [
       { k: A + "6a86ee29", alt: "Street corner view of Athreya Mane at dusk, showing the brick jaali screen and warm interior light" },
@@ -76,12 +77,13 @@ export const projects: Project[] = [
     status: "completed",
     typology: "Residence",
     summary:
-      "A family home built around a double-height hall, with a pergola skylight that throws stripes of sun across its earth-block walls.",
+      "A three-level 3 BHK home in exposed brick masonry and compressed stabilised earth blocks, built for texture, thermal comfort and material honesty.",
+    // description: the client's own text (Nov 2026)
     description: [
-      "Gurukrupa is a family home in Hosakerehalli. The middle of the house is a double-height hall, and a pergola skylight above it sends bands of sunlight across the walls as the day goes on.",
-      "The walls of the hall and the stair are compressed earth blocks, left exposed. Outside, a projecting brick jaali casts patterns of light and shade with its staggered bricks. Up on the roof, the terraces are finished in terracotta tiles with a pergola overhead.",
+      "A three-level 3 BHK residence conceived around a simple rectilinear plan, with a multipurpose hall at the ground level and private residential spaces distributed across the first and second floors.",
+      "The design explores a thoughtful approach to materiality and construction, integrating exposed brick masonry and Compressed Stabilised Earth Blocks (CSEB) to bring texture, thermal performance and material honesty into the architecture. By embracing locally relevant building materials and resource-conscious construction techniques, the residence seeks to balance contemporary living with environmental sensitivity, creating spaces that are functional, enduring and rooted in sustainable design principles.",
     ],
-    features: ["Double-height hall with pergola skylight", "Projecting brick jaali", "Exposed compressed earth block walls", "Terracotta-tiled roof terraces"],
+    features: ["Exposed brick masonry", "Compressed Stabilised Earth Block (CSEB) walls", "Projecting brick jaali", "Pergola skylight", "Terracotta-tiled roof terraces"],
     cover: { k: G + "20240617-074027", alt: "Double-height hall at Gurukrupa, the pergola skylight casting stripes of sun across an earth-block wall" },
     gallery: [
       { k: G + "20240617-060330", alt: "Street elevation of Gurukrupa: an exposed brick tower beside white balconies" },
@@ -98,20 +100,21 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "yamoksh-residence",
-    title: "Yamoksh Residence",
+    slug: "brigade-cornerstone-utopia",
+    title: "Brigade Cornerstone Utopia",
     location: "Bengaluru",
     status: "completed",
     typology: "Apartment interiors",
     scope: "Interior design",
     summary:
-      "An apartment interior planned so every room flows into the next, with soft cove lighting and arched panels in the living room.",
+      "A contemporary 2 BHK interior with bold finishes, curated colour and texture, and expressive detailing.",
+    // description: the client's own text (Nov 2026)
     description: [
-      "We designed the full interior of this family apartment. The layout keeps rooms opening into each other without clutter, so the home feels bigger than it is.",
-      "Light timber, textured wall panels and hidden cove lighting run through the whole flat, from the arched niches in the living room to the backlit mirror in the bathroom and the modular kitchen.",
+      "A contemporary 2 BHK interior designed to create a vibrant and visually engaging living environment. The design explores bold aesthetics, rich finishes and expressive detailing, bringing together carefully curated colours, textures, lighting and furnishings.",
+      "Each space is thoughtfully composed to balance functionality with visual appeal, resulting in interiors that feel stylish, lively and tailored to modern urban living.",
     ],
-    features: ["Space planning", "Cove and accent lighting", "Arched textured wall panels", "Modular kitchen and wardrobes"],
-    cover: { k: Y + "20240915-213357", alt: "Living room of the Yamoksh Residence with arched textured panels, cove-lit ceiling and tan sofas" },
+    features: ["2 BHK apartment interior", "Cove and accent lighting", "Arched textured wall panels", "Modular kitchen and wardrobes"],
+    cover: { k: Y + "20240915-213357", alt: "Living room at Brigade Cornerstone Utopia with arched textured panels, cove-lit ceiling and tan sofas" },
     gallery: [
       { k: Y + "20240915-213326", alt: "Living room with three arched, textured wall panels and floating display shelves" },
       { k: Y + "20240915-213348", alt: "Backlit timber television wall with a floating white console" },
