@@ -248,3 +248,131 @@ export function leafCard(size = 256): THREE.Texture {
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
 }
+
+/**
+ * Backlit lotus mandala with a Ganesha cut-out (an original design).
+ * Returns two RGBA textures whose transparent areas are cut through:
+ *  - outer: a disc with two staggered rings of 16 lotus petals
+ *  - inner: a smaller raised disc with the Ganesha silhouette
+ * Panel colour is a warm teak; the light comes from behind.
+ */
+export function ganeshaMandala(size = 1024) {
+  const make = (draw: (g: CanvasRenderingContext2D, S: number) => void) => {
+    const c = document.createElement("canvas");
+    c.width = c.height = size;
+    const g = c.getContext("2d")!;
+    draw(g, size);
+    // fine grain so the panel reads as wood, not plastic
+    const img = g.getImageData(0, 0, size, size);
+    const d = img.data;
+    const { fbm } = makeNoise(131);
+    for (let y = 0; y < size; y += 1) {
+      for (let x = 0; x < size; x += 1) {
+        const i = (y * size + x) * 4;
+        if (d[i + 3] === 0) continue;
+        const n = fbm(x / size, (y / size) * 0.2, 30, 3);
+        const k = 0.86 + n * 0.28;
+        d[i] *= k;
+        d[i + 1] *= k;
+        d[i + 2] *= k;
+      }
+    }
+    g.putImageData(img, 0, 0);
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = 8;
+    return t;
+  };
+  const PANEL = "#6b4429";
+  const cut = (g: CanvasRenderingContext2D, p: Path2D) => {
+    g.save();
+    g.globalCompositeOperation = "destination-out";
+    g.fill(p);
+    g.restore();
+  };
+  // a lotus petal pointing outwards from the centre
+  const petal = (cx: number, cy: number, ang: number, r0: number, r1: number, half: number) => {
+    const p = new Path2D();
+    const pt = (r: number, a: number) => [cx + Math.cos(a) * r, cy + Math.sin(a) * r] as const;
+    const [bx, by] = pt(r0, ang);
+    const [tx, ty] = pt(r1, ang);
+    const [lx, ly] = pt(r0 + (r1 - r0) * 0.45, ang - half);
+    const [rx, ry] = pt(r0 + (r1 - r0) * 0.45, ang + half);
+    const [lcx, lcy] = pt(r0 + (r1 - r0) * 0.9, ang - half * 0.55);
+    const [rcx, rcy] = pt(r0 + (r1 - r0) * 0.9, ang + half * 0.55);
+    p.moveTo(bx, by);
+    p.quadraticCurveTo(lx, ly, lcx, lcy);
+    p.quadraticCurveTo(lcx + (tx - lcx) * 0.4, lcy + (ty - lcy) * 0.4, tx, ty);
+    p.quadraticCurveTo(rcx + (tx - rcx) * 0.4, rcy + (ty - rcy) * 0.4, rcx, rcy);
+    p.quadraticCurveTo(rx, ry, bx, by);
+    p.closePath();
+    return p;
+  };
+
+  const outer = make((g, S) => {
+    const c = S / 2, R = S * 0.495;
+    g.fillStyle = PANEL;
+    g.beginPath();
+    g.arc(c, c, R, 0, Math.PI * 2);
+    g.fill();
+    // a thin slot just inside the rim
+    const slot = new Path2D();
+    slot.arc(c, c, R * 0.93, 0, Math.PI * 2);
+    slot.arc(c, c, R * 0.915, 0, Math.PI * 2, true);
+    cut(g, slot);
+    // two rings of petals, the second offset by half a step; shrunk so ribs remain
+    const N = 16, step = (Math.PI * 2) / N;
+    for (let i = 0; i < N; i++) {
+      cut(g, petal(c, c, i * step, R * 0.6, R * 0.88, step * 0.3));
+      cut(g, petal(c, c, i * step + step / 2, R * 0.47, R * 0.74, step * 0.27));
+    }
+    // open the centre so the raised inner disc's cut-outs can glow
+    const hole = new Path2D();
+    hole.arc(c, c, R * 0.42, 0, Math.PI * 2);
+    cut(g, hole);
+  });
+
+  const inner = make((g, S) => {
+    const c = S / 2, R = S * 0.495;
+    g.fillStyle = PANEL;
+    g.beginPath();
+    g.arc(c, c, R, 0, Math.PI * 2);
+    g.fill();
+    const ring = new Path2D();
+    ring.arc(c, c, R * 0.9, 0, Math.PI * 2);
+    ring.arc(c, c, R * 0.885, 0, Math.PI * 2, true);
+    cut(g, ring);
+    // Ganesha: each part cut separately so thin ribs of panel hold the shape together
+    g.save();
+    const k = (S * 0.72) / 200;
+    g.translate(c - 100 * k, c - 116 * k);
+    g.scale(k, k);
+    const parts = [
+      "M70 90 C52 72 26 70 14 88 C8 98 12 106 9 116 C6 128 14 136 14 146 C16 160 34 168 52 160 C48 150 56 142 62 134 Z",
+      "M130 90 C148 72 174 70 186 88 C192 98 188 106 191 116 C194 128 186 136 186 146 C184 160 166 168 148 160 C152 150 144 142 138 134 Z",
+      "M100 84 C124 84 140 94 141 110 C142 126 134 138 122 145 C116 148 108 149 100 149 C92 149 84 148 78 145 C66 138 58 126 59 110 C60 94 76 84 100 84 Z",
+      "M64 70 H136 Q138 77 134 78 H66 Q62 77 64 70 Z",
+      "M70 66 C72 56 82 52 100 52 C118 52 128 56 130 66 Z",
+      "M80 50 C82 43 89 40 100 40 C111 40 118 43 120 50 Z",
+      "M100 14 C106 21 107 28 100 35 C93 28 94 21 100 14 Z",
+      "M88 152 C86 176 92 196 108 210 C122 222 144 216 144 200 C144 188 130 185 126 194 C124 200 118 201 114 196 C106 184 110 168 112 152 Z",
+      "M119 150 C129 154 133 164 129 173 C124 165 120 159 115 155 Z",
+    ];
+    g.save();
+    g.globalCompositeOperation = "destination-out";
+    for (const d of parts) g.fill(new Path2D(d));
+    g.restore();
+    // ribs between overlapping parts, as a real cut panel needs
+    g.strokeStyle = PANEL;
+    g.lineWidth = 3.2;
+    g.lineJoin = "round";
+    for (const i of [2, 3, 4, 5, 7, 8]) g.stroke(new Path2D(parts[i]));
+    // eyes and tilak stay as solid panel inside the face
+    g.fillStyle = PANEL;
+    g.fill(new Path2D("M80 110 Q87 104 94 110 Q87 114 80 110 Z"));
+    g.fill(new Path2D("M106 110 Q113 104 120 110 Q113 114 106 110 Z"));
+    g.fill(new Path2D("M97.5 90 H102.5 L101.6 104 H98.4 Z"));
+    g.restore();
+  });
+  return { outer, inner };
+}
