@@ -14,19 +14,15 @@ export default function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("top");
   const [tone, setTone] = useState<"dark" | "light">(onHome ? "dark" : "light");
-  const [hidden, setHidden] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const dialog = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
 
   // which room is under the middle of the screen, and what tone is under the header
   useEffect(() => {
-    let lastY = window.scrollY;
     const update = () => {
-      const y = window.scrollY;
-      setHidden(y > lastY + 4 && y > 400 && !open);
-      if (y < lastY - 4) setHidden(false);
-      lastY = y;
-      const probe = document.elementFromPoint(window.innerWidth / 2, 36);
+      setScrolled(window.scrollY > 24);
+      const probe = document.elementFromPoint(window.innerWidth / 2, 80); // just below the header
       const toneEl = probe?.closest("[data-tone]") as HTMLElement | null;
       setTone((toneEl?.dataset.tone as "dark" | "light") ?? "light");
       if (!onHome) return;
@@ -83,7 +79,7 @@ export default function SiteHeader() {
 
   return (
     <>
-      <header className={`header header--${tone}${hidden ? " is-hidden" : ""}${open ? " is-open" : ""}`}>
+      <header className={`header header--${tone}${scrolled ? " is-scrolled" : ""}${open ? " is-open" : ""}`}>
         <Link href="/" className="header__brand" aria-label="Earth & Ethos home page">
           <LogoMark className="header__mark" title={null} />
           <span className="header__name">Earth &amp; Ethos</span>
