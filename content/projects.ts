@@ -82,10 +82,10 @@ export const projects: Project[] = [
       "Brick is used everywhere: on the walls of the hall and the stair, and in a projecting jaali whose staggered bricks cast patterns of light and shade. Up on the roof, the terraces are finished in terracotta tiles with a pergola overhead.",
     ],
     features: ["Double-height hall with pergola skylight", "Projecting brick jaali", "Exposed brick feature walls", "Terracotta-tiled roof terraces"],
-    cover: { k: G + "20240617-074433", alt: "Projecting brick jaali at Gurukrupa, its staggered bricks catching the afternoon sun" },
+    cover: { k: G + "20240617-074027", alt: "Double-height hall at Gurukrupa, the pergola skylight casting stripes of sun across a brick wall" },
     gallery: [
       { k: G + "20240617-060330", alt: "Street elevation of Gurukrupa: an exposed brick tower beside white balconies" },
-      { k: G + "20240617-074027", alt: "Double-height hall with a pergola skylight casting stripes of sun across a brick wall" },
+      { k: G + "20240617-074433", alt: "Projecting brick jaali, its staggered bricks catching the afternoon sun" },
       { k: G + "20240617-073924", alt: "Hall with a brick feature wall, tall timber-framed doors and sunlight on the floor" },
       { k: G + "20240617-074337", alt: "Exposed brick wall with a timber shelf and white balustrade at the upper landing" },
       { k: G + "20240617-074126", alt: "Staircase rising along an exposed brick wall with white steel balusters" },
@@ -233,12 +233,12 @@ export const projects: Project[] = [
     title: "Mr. Dinesh Home",
     location: "Ullala, Bengaluru",
     status: "ongoing",
-    typology: "Home interiors",
-    scope: "Interior design",
+    typology: "Residence",
+    scope: "Residential building and interiors",
     summary:
       "Bedrooms and a kitchen in light timber and woven textures, with sheer curtains that let the morning light in.",
     description: [
-      "Interior design for a family home in Ullala.",
+      "A family residence in Ullala. The visualisations here show its interiors.",
       "The bedrooms have woven-texture wall panels, light timber beds and wardrobes, and sheer curtains, which keeps them calm and full of daylight. The kitchen uses the same timber.",
     ],
     features: ["Woven-texture wall panelling", "Light timber joinery", "Sheer, layered window treatments"],
