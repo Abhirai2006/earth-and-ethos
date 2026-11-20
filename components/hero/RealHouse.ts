@@ -9,6 +9,8 @@
 // through the skylight, and eye adaptation when you step inside.
 import * as THREE from "three";
 import { Sky } from "three/examples/jsm/objects/Sky.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
 import { Reflector } from "three/examples/jsm/objects/Reflector.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
@@ -110,8 +112,7 @@ export class RealHouse {
   private doorR = new THREE.Group();
   private swing = new THREE.Group();
   private pendants: THREE.PointLight[] = [];
-  private diyas: { light: THREE.PointLight; flame: THREE.Mesh; phase: number }[] = [];
-  private shrineGlow?: { wash: THREE.PointLight; halo: THREE.ShaderMaterial; box: THREE.MeshBasicMaterial; base: THREE.Color };
+  private shrineGlow?: { wash: THREE.PointLight; halo: THREE.ShaderMaterial; box: THREE.MeshBasicMaterial; base: THREE.Color; spot: THREE.SpotLight };
   private shafts!: THREE.Mesh;
   private motes!: THREE.Points;
   private interior = new THREE.Group();
@@ -125,6 +126,10 @@ export class RealHouse {
   private stride = 0;
   private walk = 0;
   private adapt = 0;
+  private nightTarget = 0;
+  private nightBlend = 0;
+  private nightK = 0;
+  private moonDir = new THREE.Vector3(-0.35, 0.62, 0.7).normalize();
   private frameMs = 16;
   private slowFrames = 0;
   private degraded = false;
@@ -617,7 +622,7 @@ export class RealHouse {
     const trees: [number, number, number][] = [[-12, 6, 1.45], [-15.5, -6, 1.8], [18.5, 4, 1.4], [20, -8, 1.9], [-4, -16, 2.0], [12, -17, 1.7], [-8.5, 12.5, 1.1]];
     trees.forEach(([x, z, s], i) => this.tree(W, x, z, s, bark, leafMat, hq ? 480 : 200, 31 + i));
     this.tree(I, 6.5, -4.6, 0.62, bark, leafMat, hq ? 160 : 70, 77, 0.8);
-    this.buildShrine(I, timber, brass);
+    this.buildShrine(I, timber);
 
     // grass: individual blades, swaying in a travelling gust
     {
@@ -785,17 +790,20 @@ export class RealHouse {
   }
 
   /**
-   * Ganesha facing the entrance: a backlit lotus mandala in teak, set on a
-   * smooth lime-plaster panel in the brick wall, with two brass diyas below.
-   * The glow is physical too: a light box behind the cut-outs and a point light
-   * between panel and wall that washes the plaster.
+   * Facing the entrance: a brass Ganesha on a low teak console in front of a
+   * backlit lotus mandala, set on a small lime-plaster panel. Decorative, not a
+   * pooja room. The glow is physical: a light box behind the cut-outs, a point
+   * light washing the plaster, and a concealed spot that lifts the brass.
    */
-  private buildShrine(I: THREE.Object3D, timber: THREE.Material, brass: THREE.Material) {
-    const cx = 4.1, cy = 2.12, wallZ = -7.7, R = 0.56;
+  private buildShrine(I: THREE.Object3D, timber: THREE.Material) {
+    const cx = 4.1, cy = 2.32, wallZ = -7.7, R = 0.5;
     const plasterPanel = this.std(0xb9ae9e, "plaster");
-    this.box(I, 2.1, 2.5, 0.025, cx, 0.9, wallZ + 0.012, plasterPanel, { edges: false, cast: false });
-    // ledge
-    this.box(I, 1.5, 0.05, 0.28, cx, 1.06, wallZ + 0.16, timber, { edges: false });
+    this.box(I, 1.5, 1.5, 0.025, cx, cy - 0.75, wallZ + 0.012, plasterPanel, { edges: false, cast: false });
+
+    // low console with a slatted front
+    const top = 0.3 + 0.82;
+    this.box(I, 1.5, 0.82, 0.42, cx, 0.3, wallZ + 0.23, timber, { edges: false });
+    for (let i = 0; i < 9; i++) this.box(I, 0.02, 0.7, 0.012, cx - 0.64 + i * 0.16, 0.36, wallZ + 0.446, timber, { edges: false, cast: false });
 
     const tex = TX.ganeshaMandala(this.hq ? 1024 : 512);
     this.disposables.push(tex.outer, tex.inner);
@@ -809,11 +817,8 @@ export class RealHouse {
     this.disposables.push(disc, discIn);
     const outer = new THREE.Mesh(disc, panelMat(tex.outer));
     outer.position.set(cx, cy, wallZ + 0.07);
-    outer.castShadow = true;
     const inner = new THREE.Mesh(discIn, panelMat(tex.inner));
     inner.position.set(cx, cy, wallZ + 0.09);
-    inner.castShadow = true;
-    // panel edges, so it has thickness when seen at an angle
     const rimGeo = new THREE.CylinderGeometry(R, R, 0.018, 96, 1, true);
     rimGeo.rotateX(Math.PI / 2);
     const rimInGeo = new THREE.CylinderGeometry(R * 0.44, R * 0.44, 0.018, 72, 1, true);
@@ -826,14 +831,12 @@ export class RealHouse {
     rimIn.position.set(cx, cy, wallZ + 0.081);
     I.add(outer, inner, rim, rimIn);
 
-    // the light box behind the cut-outs (bright enough to bloom)
     const glowCol = new THREE.Color(1.0, 0.62, 0.3); // deep amber: stays warm after tone mapping
-    const boxMat = new THREE.MeshBasicMaterial({ color: glowCol.clone().multiplyScalar(7) });
+    const boxMat = new THREE.MeshBasicMaterial({ color: glowCol.clone().multiplyScalar(6) });
     this.disposables.push(boxMat);
     const lightBox = new THREE.Mesh(new THREE.CircleGeometry(R * 0.97, 72), boxMat);
     lightBox.position.set(cx, cy, wallZ + 0.04);
     I.add(lightBox);
-    // halo on the wall: falls off with distance from the rim
     const haloMat = new THREE.ShaderMaterial({
       transparent: true,
       depthWrite: false,
@@ -842,46 +845,53 @@ export class RealHouse {
       vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.0); }",
       fragmentShader: `uniform vec3 uC; uniform float uA; varying vec2 vUv;
         void main(){
-          float r = length(vUv - 0.5) * 2.0;          // 0 centre, 1 edge of quad
-          float ring = smoothstep(0.32, 0.4, r);      // hidden behind the panel
+          float r = length(vUv - 0.5) * 2.0;
+          float ring = smoothstep(0.32, 0.4, r);
           float fall = exp(-max(r - 0.38, 0.0) * 5.5);
           gl_FragColor = vec4(uC * 1.2, ring * fall * 0.6 * uA);
         }`,
     });
     this.disposables.push(haloMat);
-    const halo = new THREE.Mesh(new THREE.PlaneGeometry(R * 2 / 0.38, R * 2 / 0.38), haloMat);
+    const halo = new THREE.Mesh(new THREE.PlaneGeometry((R * 2) / 0.38, (R * 2) / 0.38), haloMat);
     halo.position.set(cx, cy, wallZ + 0.03);
     I.add(halo);
-    const wash = new THREE.PointLight(0xffb878, 0, 1.8, 2);
+    const wash = new THREE.PointLight(0xffb878, 0, 1.6, 2);
     wash.position.set(cx, cy, wallZ + 0.12);
     I.add(wash);
-    this.shrineGlow = { wash, halo: haloMat, box: boxMat, base: glowCol };
+    const spot = new THREE.SpotLight(0xffe0b8, 0, 4, 0.36, 0.75, 2);
+    spot.position.set(cx + 0.35, 2.75, wallZ + 1.25);
+    spot.target.position.set(cx, top + 0.27, wallZ + 0.24);
+    I.add(spot, spot.target);
+    this.shrineGlow = { wash, halo: haloMat, box: boxMat, base: glowCol, spot };
 
-    // two brass standing diyas with living flames
-    const profile = [
-      [0, 0], [0.055, 0], [0.06, 0.01], [0.03, 0.025], [0.014, 0.04], [0.012, 0.11], [0.022, 0.125],
-      [0.012, 0.135], [0.016, 0.14], [0.055, 0.16], [0.06, 0.175], [0.05, 0.17], [0, 0.165],
-    ].map(([x, y]) => new THREE.Vector2(x, y));
-    const lampGeo = new THREE.LatheGeometry(profile, 28);
-    this.disposables.push(lampGeo);
-    const flameGeo = new THREE.SphereGeometry(0.011, 12, 10);
-    flameGeo.scale(1, 2.6, 1);
-    this.disposables.push(flameGeo);
-    const flameMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1.0, 0.62, 0.22).multiplyScalar(9) });
-    this.disposables.push(flameMat);
-    this.diyas = [];
-    for (const side of [-1, 1]) {
-      const x = cx + side * 0.5;
-      const lamp = new THREE.Mesh(lampGeo, brass);
-      lamp.position.set(x, 1.085, wallZ + 0.17);
-      lamp.castShadow = true;
-      const flame = new THREE.Mesh(flameGeo, flameMat);
-      flame.position.set(x + 0.045, 1.085 + 0.2, wallZ + 0.17);
-      const light = new THREE.PointLight(0xffa25a, 0, 3, 2);
-      light.position.set(x + 0.045, 1.33, wallZ + 0.24);
-      I.add(lamp, flame, light);
-      this.diyas.push({ light, flame, phase: side * 1.7 });
-    }
+    // the brass statue: loaded in the background, scaled to a 55 cm figure
+    const url = this.hq ? "/models/ganesha.glb" : "/models/ganesha-lite.glb";
+    const statueMat = new THREE.MeshStandardMaterial({ color: 0xc9a25a, metalness: 1, roughness: 0.32, envMapIntensity: 1.6 });
+    this.disposables.push(statueMat);
+    new GLTFLoader()
+      .setMeshoptDecoder(MeshoptDecoder)
+      .loadAsync(url)
+      .then((gltf) => {
+        const obj = gltf.scene;
+        const box = new THREE.Box3().setFromObject(obj);
+        const size = box.getSize(new THREE.Vector3());
+        const centre = box.getCenter(new THREE.Vector3());
+        const s = 0.55 / size.y;
+        obj.scale.setScalar(s);
+        obj.position.set(cx - centre.x * s, top - box.min.y * s, wallZ + 0.24 - centre.z * s);
+        obj.traverse((o) => {
+          const m = o as THREE.Mesh;
+          if (m.isMesh) {
+            m.material = statueMat;
+            m.castShadow = m.receiveShadow = true;
+            this.disposables.push(m.geometry);
+          }
+        });
+        I.add(obj);
+      })
+      .catch(() => {
+        /* the hall still reads without the statue */
+      });
   }
 
   // shafts of sun through the pergola, and dust motes that only glow inside them
@@ -1006,13 +1016,15 @@ export class RealHouse {
   private updateSun(t: number, force = false) {
     const k = smooth(range(t, 0.12, 0.5));
     // morning sun over your right shoulder, setting over your left: shadows sweep across the facade
-    const elev = lerp(50, 24, k) * D2R;
-    const az = lerp(62, -40, k) * D2R;
+    const elev = (lerp(50, 24, k) - this.nightK * 31) * D2R;
+    const az = (lerp(62, -40, k) - this.nightK * 14) * D2R;
     this.sunDir.set(Math.cos(elev) * Math.sin(az), Math.sin(elev), Math.cos(elev) * Math.cos(az)).normalize();
     for (const s of [this.sky, this.envSky]) s.material.uniforms.sunPosition.value.copy(this.sunDir);
-    this.sun.position.copy(this.sun.target.position).addScaledVector(this.sunDir, 60);
+    // after sunset the moon does the lighting, from high in the east
+    const lightDir = this.sunDir.clone().lerp(this.moonDir, smooth(clamp(this.nightK * 1.4))).normalize();
+    this.sun.position.copy(this.sun.target.position).addScaledVector(lightDir, 60);
     const warm = 1 - clamp((elev / D2R - 22) / 26);
-    this.sun.color.setRGB(1, lerp(0.95, 0.7, warm), lerp(0.88, 0.46, warm));
+    this.sun.color.setRGB(lerp(1, 0.62, this.nightK), lerp(lerp(0.95, 0.7, warm), 0.72, this.nightK), lerp(lerp(0.88, 0.46, warm), 1.0, this.nightK));
     for (const s of [this.sky, this.envSky]) s.material.uniforms.turbidity.value = lerp(4.5, 9, warm);
     const key = `${Math.round(elev / D2R / (this.hq ? 3 : 8))}:${Math.round(az / D2R / (this.hq ? 4 : 12))}`;
     if (force || key !== this.lastEnvKey) {
@@ -1093,30 +1105,28 @@ export class RealHouse {
     for (const g of this.glass) g.opacity = clamp((T - 10.8) / 0.8) * 0.42;
 
     // 3. sun and sky
+    // night arrives with the evening part of the time-lapse
+    this.nightK = this.nightBlend * smooth(range(t, 0.3, 0.5));
     this.updateSun(t);
     const k = smooth(range(t, 0.12, 0.5));
-    this.sun.intensity = lerp(5.2, 4.6, k);
-    this.hemi.intensity = lerp(0.22, 0.16, k);
+    this.sun.intensity = lerp(lerp(5.2, 4.6, k), 0.45, this.nightK);
+    this.hemi.intensity = lerp(lerp(0.22, 0.16, k), 0.06, this.nightK);
     const fog = this.scene.fog as THREE.Fog;
-    fog.color.setRGB(lerp(0.78, 0.86, k), lerp(0.8, 0.72, k), lerp(0.82, 0.6, k));
+    fog.color.setRGB(lerp(lerp(0.78, 0.86, k), 0.06, this.nightK), lerp(lerp(0.8, 0.72, k), 0.08, this.nightK), lerp(lerp(0.82, 0.6, k), 0.13, this.nightK));
 
     // 4. evening: lamps and windows
-    const lamps = smooth(range(t, 0.44, 0.6));
-    for (const g of this.glows) g.emissiveIntensity = lamps * 3.2;
+    const lamps = Math.max(smooth(range(t, 0.44, 0.6)), this.nightK);
+    for (const g of this.glows) g.emissiveIntensity = lamps * (3.2 + this.nightK * 1.6);
     for (const pl of this.pendants) pl.intensity = lamps * 9;
     {
-      // flames flicker from turbulence: several incommensurate frequencies
       const sec = now / 1000;
-      for (const d of this.diyas) {
-        const fl = 1 + 0.09 * Math.sin(sec * 13.1 + d.phase) + 0.06 * Math.sin(sec * 23.7 + 1.3 * d.phase) + 0.04 * Math.sin(sec * 41.3 + 2.1);
-        d.light.intensity = 0.8 * fl;
-        d.flame.scale.set(1, 0.92 + (fl - 1) * 1.6, 1);
-      }
       if (this.shrineGlow) {
         // the LED backlight breathes very slightly, never flashes
         const b = 1 + 0.03 * Math.sin(sec * 0.6);
         this.shrineGlow.wash.intensity = 0.6 * b;
         this.shrineGlow.halo.uniforms.uA.value = b;
+        this.shrineGlow.spot.intensity = 11;
+        this.shrineGlow.box.color.copy(this.shrineGlow.base).multiplyScalar(lerp(6, 3.4, this.nightK));
       }
     }
     if (this.bloom) this.bloom.strength = 0.05 + lamps * 0.3;
@@ -1151,11 +1161,12 @@ export class RealHouse {
     const inside = smooth(range(t, 0.64, 0.76));
     if (!this.shafts && t > 0.5) this.buildLightShafts();
     if (this.shafts) {
-      (this.shafts.material as THREE.ShaderMaterial).uniforms.uA.value = inside;
-      (this.motes.material as THREE.ShaderMaterial).uniforms.uA.value = inside;
+      // no sun at night, so no shafts
+      (this.shafts.material as THREE.ShaderMaterial).uniforms.uA.value = inside * (1 - this.nightK);
+      (this.motes.material as THREE.ShaderMaterial).uniforms.uA.value = inside * (1 - this.nightK);
     }
     this.adapt += (inside - this.adapt) * (1 - Math.exp(-dt / 900));
-    this.renderer.toneMappingExposure = this.exposure * lerp(1, 1.5, this.adapt);
+    this.renderer.toneMappingExposure = this.exposure * lerp(1, 1.5, this.adapt) * lerp(1, 1.9, this.nightK * (1 - this.adapt * 0.8));
     this.scene.environmentIntensity = lerp(0.55, 0.32, this.adapt);
 
     const ci = CHAPTERS.reduce((a, c, i) => (t >= c.at ? i : a), 0);
@@ -1163,6 +1174,13 @@ export class RealHouse {
       this.chapter = ci;
       this.onChapter?.(ci);
     }
+  }
+
+  /** evening or night: the time-lapse ends at golden hour, or carries on into the night */
+  setNight(on: boolean, instant = false) {
+    this.nightTarget = on ? 1 : 0;
+    if (instant) this.nightBlend = this.nightTarget;
+    if (!this.running) this.renderOnce();
   }
 
   setProgress(t: number) {
@@ -1196,6 +1214,8 @@ export class RealHouse {
     } else this.slowFrames = 0;
     this.uTime.value = this.clock;
     if (this.intro < 1) this.intro = Math.min(1, this.intro + dt / 2600);
+    this.nightBlend += (this.nightTarget - this.nightBlend) * (1 - Math.exp(-dt / 700));
+    if (Math.abs(this.nightTarget - this.nightBlend) < 0.001) this.nightBlend = this.nightTarget;
     const k = 1 - Math.exp(-dt / 150);
     this.p += (this.target - this.p) * k;
     if (Math.abs(this.target - this.p) < 0.00003) this.p = this.target;
