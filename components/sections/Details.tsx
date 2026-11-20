@@ -23,7 +23,7 @@ export default function Details() {
     <section id="details" className="details" data-tone="light" aria-labelledby="details-h">
       <div className="wrap">
         <div className="details__head">
-          <RoomTag no="05" room="Material library" label="Details" />
+          <RoomTag no="07" room="Material library" label="Details" />
           <h2 id="details-h" className="display">Up close.</h2>
           <p>
             Brick laid so that light and air can pass through. A filler-slab ceiling. Timber carved by hand. A few
