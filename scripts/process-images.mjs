@@ -21,6 +21,7 @@ const FOLDERS = {
   veena: "veena-mahesh-home",
   dinesh: "dinesh-home",
   jakkur: "jakkur-office",
+  stock: "stock", // licensed third-party photography (Unsplash), credited in content/hero.ts
 };
 
 const slug = (s) =>
