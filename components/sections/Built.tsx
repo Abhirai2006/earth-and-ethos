@@ -9,7 +9,7 @@ export default function Built() {
     <section id="built" className="built" aria-labelledby="built-h">
       <div className="built__intro" data-tone="light">
         <div className="wrap">
-          <RoomTag no="03" room="Gallery" label="Completed works" />
+          <RoomTag no="04" room="Gallery" label="Completed works" />
           <h2 id="built-h" className="display">
             Three finished homes, with families living in them.
           </h2>
