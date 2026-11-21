@@ -392,36 +392,75 @@ p {
   }
 }
 
-/* floor plan svg */
+/* floor plan svg: poché walls, thin door leaves, dashed swings */
 .plan__walls {
   fill: none;
   stroke: currentColor;
-  stroke-width: 6;
+  stroke-width: 5;
   stroke-linecap: square;
+}
+.plan__walls--inner {
+  stroke-width: 2.6;
 }
 .plan__doors {
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.5;
+}
+.plan__leaf {
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.plan__swing {
+  stroke-width: 0.8;
+  stroke-dasharray: 2.5 2.5;
   opacity: 0.55;
 }
 .plan__fill {
   fill: transparent;
-  transition: fill 0.3s;
+  transition: fill 0.3s, fill-opacity 0.3s;
 }
 .plan__room.is-active .plan__fill {
   fill: var(--tan);
-  fill-opacity: 0.55;
-}
-.plan__north path {
-  fill: currentColor;
+  fill-opacity: 0.3;
 }
 .plan__label {
-  font-size: 12px;
   fill: currentColor;
-  font-family: var(--font-sans);
-  font-weight: 600;
   pointer-events: none;
+}
+.plan__name {
+  font-family: var(--font-display);
+  font-size: 15px;
+}
+.plan__sub {
+  font-family: var(--font-sans);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+.plan__room.is-active .plan__name {
+  fill: var(--tan);
+}
+.plan__key {
+  fill: none;
+  stroke: currentColor;
+}
+.plan__ncircle {
+  stroke-width: 0.8;
+  opacity: 0.6;
+}
+.plan__npoint {
+  fill: currentColor;
+  stroke: none;
+}
+.plan__nlabel {
+  fill: currentColor;
+  stroke: none;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 600;
+  opacity: 0.7;
 }
 
 /* menu overlay */
@@ -467,8 +506,11 @@ p {
   cursor: pointer;
 }
 .menu__plan .plan__room:hover .plan__fill {
-  fill: var(--sage);
-  fill-opacity: 0.45;
+  fill: var(--cream);
+  fill-opacity: 0.08;
+}
+.menu__plan .plan__room:hover .plan__name {
+  fill: var(--tan);
 }
 .menu__note {
   margin-top: 12px;
@@ -2630,7 +2672,7 @@ html.no-intro .intro {
 .kn h2,
 .kn .kn__name,
 .kn .pillar h3,
-.kn .process__step h3,
+.kn .kn__step h3,
 .kn__h3 {
   font-family: var(--font-kn-serif), var(--font-display);
   font-weight: 600;
@@ -2779,5 +2821,54 @@ h2[id] {
 @media (max-aspect-ratio: 4/5) {
   .hero[data-mode="3d"] .hero__sticky {
     background-image: url("/images/brand/hero-blueprint-m.webp");
+  }
+}
+
+/* Kannada page: the process as a plain, always-visible timeline */
+.kn__process {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0 clamp(14px, 2vw, 28px);
+}
+.kn__step {
+  position: relative;
+  padding-top: 18px;
+  border-top: 1px solid var(--ink);
+  min-width: 0;
+}
+.kn__icon {
+  display: block;
+  width: 44px;
+  height: 44px;
+  color: var(--brown-ink);
+  margin-bottom: 10px;
+}
+.kn__n {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--brown-ink);
+}
+.kn .kn__step h3 {
+  font-size: clamp(1.15rem, 1.45vw, 1.4rem);
+  margin: 6px 0 8px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.kn__step p {
+  color: var(--ink-2);
+  font-size: 0.95rem;
+}
+@media (max-width: 1100px) {
+  .kn__process {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px 24px;
+  }
+}
+@media (max-width: 560px) {
+  .kn__process {
+    grid-template-columns: 1fr;
   }
 }
