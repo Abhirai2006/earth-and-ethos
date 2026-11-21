@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ProcessIcon from "@/components/ui/ProcessIcon";
 import { Noto_Serif_Kannada, Noto_Sans_Kannada } from "next/font/google";
 import { kn } from "@/content/kn";
 import { completed, ongoing } from "@/content/projects";
@@ -66,11 +67,11 @@ export default function Kannada() {
       <section className="kn__sec" data-tone="light">
         <div className="wrap">
           <h2>{kn.processTitle}</h2>
-          <ol className="process__list">
+          <ol className="kn__process">
             {kn.process.map((s) => (
-              <li key={s.n} className="process__step">
-                <span className="process__n">{s.n}</span>
-                <span className="process__tick" aria-hidden="true" />
+              <li key={s.n} className="kn__step">
+                <ProcessIcon n={s.n} className="kn__icon" />
+                <span className="kn__n">{s.n}</span>
                 <h3>{s.title}</h3>
                 <p>{s.body}</p>
               </li>
